@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Massive</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='bigDrip.css' rel='stylesheet'>
+<link rel='icon' type='image/x-icon' href="favicon2.ico">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+</style>
+
+<script>
+window.onload = function() {
+	var daysTotal;
+	var daysLeftMonth;
+	const d = new Date();
+	let month = d.getMonth();
+	if (month != 4) {
+		daysLeftMonth = 31 - (d.getDate())
+		daysTotal = daysLeftMonth + 7
+	} else if (month == 4) {
+		daysTotal = 7 - d.getDate()
+	}
+	document.getElementById("month").innerHTML = daysTotal;
+};
+</script>
+</head>
+<body>
+
+<header>
+	<h1>~~~Windoge Official Website~~~</h1>
+</header>
+<div>
+	<div class='window_left'>
+		<h2>Days Left Until Spring Break:</h2>
+		<div class='a' id='month'></div>
+	</div>
+	<div class='window_right'>
+		<p>L rng or something goes here</p>
+	</div>
+</div>
+
+</body>
+</html>
