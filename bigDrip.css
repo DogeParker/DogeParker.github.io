@@ -3,12 +3,16 @@ body {
 	margin: 0;
 	background-color:#2D394D;
 	line-height: 1;
-	font-family: 'Roboto Mono';
+	font-family: 'Roboto Mono', 'sans-serif;';
 }
 header {
 	background-color: #1e2533;
 	padding: 30px;
-	text-align: center;
+	text-align: left;
+}
+.navi {
+	font-size: 28px;
+	color:#A65D78;
 }
 .window_left {
 	border-radius: 15px;
@@ -24,6 +28,17 @@ header {
 	height: 200px;
 	background: #384761;
 }
+.window_about {
+	padding: 20px;
+	background: #384761;
+}
+input[type=text] {
+	font-family: 'Roboto Mono';
+	margin-top: 5px;
+	padding: 3px;
+	border-radius: 5px;
+	border: inset;
+}
 h1 {
 	font-size: 50px;
 	color:#F27798;
@@ -35,6 +50,12 @@ h2 {
 div.a {
 	font-size: 22px;
 	color:#F2F0F0;
+	float: left;
+}
+button {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-family: 'Roboto Mono';
 }
 div {
 	float: left;

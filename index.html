@@ -25,20 +25,33 @@ window.onload = function() {
 	}
 	document.getElementById("month").innerHTML = daysTotal;
 };
+function randomNum() {
+	n = document.getElementById("rngInput").value;
+	let s = Math.floor((Math.random() * n) + 1);
+	document.getElementById("rngOutput").innerHTML = s;
+}
 </script>
 </head>
 <body>
 
 <header>
-	<h1>~~~Windoge Official Website~~~</h1>
+	<h1>Windoge Official Website</h1>
+	<a href="index.html" class="navi">Home</a>
+	<a href="about.html" class="navi">About</a>
 </header>
+
+</div>
 <div>
 	<div class='window_left'>
 		<h2>Days Left Until Spring Break:</h2>
-		<div class='a' id='month'></div>
+		<div style="font-size: 52px;"class='a' id='month'></div>
 	</div>
 	<div class='window_right'>
-		<p>L rng or something goes here</p>
+		<h2>Random Number Generator</h2><br>
+		<div class="a">Enter a number (>1)</div><br>
+		<input placeholder="Type Here" type="text" id ="rngInput" name="rngInput"><br>
+		<button class="b" onclick="randomNum()">Generate</button><br>
+		<div style="margin-right: 5px;" class="a">Your Number Is:</div><div class="a" id="rngOutput"></div>
 	</div>
 </div>
 
