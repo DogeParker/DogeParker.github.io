@@ -14,25 +14,47 @@ header {
 	font-size: 28px;
 	color:#A65D78;
 }
-.window_left {
+.window {
 	border-radius: 15px;
 	margin: 5px;
 	padding: 20px;
-	height: 200px;
-	background: #384761;
-}
-.window_right {
-	border-radius: 15px;
-	margin: 5px;
-	padding: 20px;
-	height: 200px;
-	background: #384761;
-}
-.window_about {
-	padding: 20px;
+	height: 250px;
 	background: #384761;
 }
 input[type=text] {
+	font-family: 'Roboto Mono';
+	width: 115px;
+	margin-top: 5px;
+	padding: 3px;
+	border-radius: 5px;
+	border: inset;
+}
+h1 {
+	font-size: 50px;
+	color:#F27798;
+}
+h2 {
+	font-size: 28px;
+	color:#A65D78;
+}
+div.a {
+	font-size: 22px;
+	color:#F2F0F0;
+	float: left;
+}
+button {
+	float: left;
+	margin: 5px;
+	font-family: 'Roboto Mono';
+}
+div {
+	float: left;
+}
+p {
+	font-size: 22px;
+	color:#F2F0F0;
+	float: left;
+}
 	font-family: 'Roboto Mono';
 	margin-top: 5px;
 	padding: 3px;
