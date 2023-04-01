@@ -17,12 +17,7 @@ window.onload = function() {
 	var daysLeftMonth;
 	const d = new Date();
 	let month = d.getMonth();
-	if (month != 4) {
-		daysLeftMonth = 31 - (d.getDate())
-		daysTotal = daysLeftMonth + 7
-	} else if (month == 4) {
-		daysTotal = 7 - d.getDate()
-	}
+	daysTotal = 6 - d.getDate();
 	document.getElementById("month").innerHTML = daysTotal;
 };
 function randomNum() {
