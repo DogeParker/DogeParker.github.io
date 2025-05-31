@@ -34,7 +34,9 @@ function renderQuestion(index) {
   document.getElementById("lab4").innerHTML = questions[currentQuestion][4]; 
   document.getElementById("lab5").innerHTML = questions[currentQuestion][5]; 
   
-  
+  if(answers[index] > 0){
+	  document.getElementById(`opt${answers[index]}`).checked = true;
+  }
 
   backBtn.disabled = index === 0;
   nextBtn.textContent = index === questions.length - 1 ? "Finish" : "Next";
@@ -61,7 +63,6 @@ nextBtn.addEventListener("click", () => {
     currentQuestion++;
     renderQuestion(currentQuestion);
   } else {
-    alert("Quiz completed!\nYour answers: " + answers.join(", "));
     console.log(recommendJobs(answers));
 
     document.body.innerHTML = `
