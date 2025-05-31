@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Career Quiz</title>
+  <link rel="stylesheet" href="quiz.css" id = "styling"/>
+
+
+  
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+</style>
+</head>
+<body class = "quiz">
+
+
+
+
+
+  <style id = "styling">
+    .quiz {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  background-color: #cbcbcb;
+  color: #333;
+}
+
+.quiz h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.quiz .question-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quiz .options label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  gap: 8px; /* space between radio and text */
+  cursor: pointer;
+}
+
+.quiz .navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.quiz button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #1e90ff;
+  color: white;
+  cursor: pointer;
+}
+
+.quiz button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
+
+  </style>
+
+
+
+
+
+
+
+
+
+
+
+  <label id="labelWithHTML"></label>
+  <h1>Career Quiz</h1>
+  <div class="question-box">
+    <div>
+        <h2 id="question-text"></h2>
+        <form>
+        <input type="radio" id="opt1" name="option" value="1">
+        <label for="opt1" id="lab1">HTML</label><br>
+        <input type="radio" id="opt2" name="option" value="2">
+        <label for="opt2" id="lab2">CSS</label><br>
+        <input type="radio" id="opt3" name="option" value="3">
+        <label for="opt3" id="lab3">JavaScript</label><br>
+        <input type="radio" id="opt4" name="option" value="4">
+        <label for="opt4" id="lab4">Other</label><br>
+        <input type="radio" id="opt5" name="option" value="5">
+        <label for="opt5" id="lab5">PLease</label><br>
+        </form>
+    </div>
+</div>
+  <div class="navigation">
+    <button id="back-btn" disabled>Back</button>
+    <button id="next-btn">Next</button>
+  </div>
+
+  <script src="quiz.js"></script>
+</body>
+</html>
