@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Massive</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='bigDrip.css' rel='stylesheet'>
+<link rel='icon' type='image/x-icon' href="favicon2.ico">
+
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+</style>
+
+<script>
+window.onload = function() {
+	var daysTotal;
+	var daysLeftMonth;
+	const d = new Date();
+	let month = d.getMonth();
+	daysTotal = 6 - d.getDate();
+	document.getElementById("month").innerHTML = daysTotal;
+};
+function randomNum() {
+	i = document.getElementById("rngInput").value;
+	let s = Math.floor((Math.random() * i) + 1);
+	document.getElementById("rngOutput").innerHTML = s;
+}
+function RPS(userInput) {
+	var i = userInput;
+	let k = Math.floor((Math.random() * 3) + 1)
+	if (i == k) {
+		var v = "It's a tie"
+	}
+	else if (i == 1 && k == 2 || i == 2 && k == 3 || i == 3 && k == 1) {
+		var v = "You Lose"
+	}
+	else if (i == 2 && k == 1 || i == 3 && k == 2 || i == 1 && k == 3) {
+		var v = "You Win"
+	}
+	function checkID(num) {
+		if (num == 1) {
+			bb = '&#9994'
+		}
+		else if (num == 2) {
+			bb = '&#9995'
+		}
+		else if (num == 3) {
+			bb = '&#9996'
+		}
+	}
+	document.getElementById("RPSOutput").innerHTML = v;
+	checkID(i)
+	document.getElementById("PlayerRPS").innerHTML = bb;
+	checkID(k)
+	document.getElementById("CpuRPS").innerHTML = bb;
+}
+</script>
+</head>
+<body>
+    <div style="display: flex; flex-direction: column; height: 100vh;;">
+        <header>
+            <h1>Windoge Official Website</h1>
+            <a href="index.html" class="navi">Home</a>
+            <a href="about.html" class="navi">About</a>
+        </header>
+
+        <div class="t-container">
+            <div class="taskbar">
+                <div class="container">
+                    <div class ="time">
+                        9:28 PM
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
