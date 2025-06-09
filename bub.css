@@ -38,7 +38,7 @@ header {
 .window-98 {
     border-style: solid;
     border-width: 2px;
-    border-color: #252525;
+    border-color: #404040;
     border-top-color: #EFEFEF;
     border-left-color: #EFEFEF;
     width: 100%;
@@ -50,9 +50,9 @@ header {
     display: flex;
     height: 22px;
     width: 100%;
-    color: #EFEFEF;
     align-items: center;
     padding-left: 3px;
+    color: #EFEFEF;
     font-size: 14px;
     background: linear-gradient(to right, #020B87, #0F83CF)
 }
@@ -76,7 +76,7 @@ header {
 }
 
 .start {
-    border-style: outset;
+    border-style: solid;
     border-width: 2px;
     border-color: #404040;
     border-top-color: #EFEFEF;
@@ -92,6 +92,18 @@ header {
     line-height: 18px;
     width: fit-content;
     height: 24px;
+}
+
+.start:hover {
+    background-color: #b8b8b8;
+}
+
+.start:active {
+    border-left-color:#404040;
+    border-top-color: #404040;
+    border-bottom-color: #EFEFEF;
+    border-right-color: #EFEFEF;
+    border-width: 3px;
 }
 
 .container {
