@@ -13,6 +13,29 @@
 </style>
 
 <script>
+document.querySelectorAll('.window-98').forEach(win => {
+	let isDragging = false;
+	let offsetX = 0;
+	let offsetY = 0;
+
+	const header = win.querySelector('.window-header') || win;
+
+	header.style.cursor = 'move';
+	header.addEventListener('mousedown', e => {
+		isDragging = true;
+		offsetX = e.clientX - win.offsetLeft;
+		offsetY = e.clientY - win.offsetTop;
+	});
+
+	document.addEventListener('mousemove', e => {
+		if (!isDragging) return;
+		win.style.left = (e.clientX - offsetX) + 'px';
+		win.style.top = (e.clientY - offsetY) + 'px';
+	});
+
+	document.addEventListener('mouseup', () => isDragging = false);
+});
+
 function updateClock() {
   const now = new Date();
   let hours = now.getHours();
@@ -43,8 +66,8 @@ updateClock(); // run once on load
 			<div class="window-header" style="justify-items: center;">
                 <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
                 <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
-                    <button class="start" style="color:black; height: 80%; aspect-ratio: 1/1; width: fit-content; text-align: center; justify-content: flex-end; margin-right: 2px;">
-                        <img src="exit.png" class="icon" style="width: 13px; height: 13px; margin-top: 0px; margin-left: 0px;">
+                    <button class="start" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                        <img src="close.png" class="icon" style="width: 12px; height: 12px;">
                     </button>
                 </div>
 			</div>
@@ -55,13 +78,13 @@ updateClock(); // run once on load
 				<div>
 					<p style="font-size: small; color: black; margin-right: 6px;">
 						Welcome to my Windows 98 demo!<br><br>
-						This is the closest I can get to accurate Win98 stylings, but not neccisarily the closest possible, so expect some minor visual bugs :)
+						This is the closest I can get to accurate Win98 stylings, but not necessarily the closest possible, so expect some minor visual bugs :)
 					</p>
 				</div>
 			</div>
 		</div>
         
-		<div class="window-98" style="width: 200px; height: 230px; position: absolute; top: 380px; left: 280px; display: flex; flex-direction: column;">
+		<div class="window-98" style="width: 200px; height: 230px; position: absolute; top: 350px; left: 200px; display: flex; flex-direction: column;">
 			<div class="window-header">
 				<img src="mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
 				Minesweeper
@@ -89,5 +112,36 @@ updateClock(); // run once on load
             </div>
         </div>
     </div>
+
+<script>
+document.querySelectorAll('.window-98').forEach(win => {
+	let isDragging = false;
+	let offsetX = 0;
+	let offsetY = 0;
+
+	const header = win.querySelector('.window-header') || win;
+
+	header.style.cursor = 'move';
+	header.addEventListener('mousedown', e => {
+		isDragging = true;
+		offsetX = e.clientX - win.offsetLeft;
+		offsetY = e.clientY - win.offsetTop;
+		document.body.style.userSelect = 'none'; // disable text selection
+	});
+
+	document.addEventListener('mousemove', e => {
+		if (!isDragging) return;
+		win.style.left = (e.clientX - offsetX) + 'px';
+		win.style.top = (e.clientY - offsetY) + 'px';
+	});
+
+	document.addEventListener('mouseup', () => {
+		isDragging = false;
+		document.body.style.userSelect = ''; // re-enable text selection
+	});
+});
+</script>
+
+
 </body>
 </html>
