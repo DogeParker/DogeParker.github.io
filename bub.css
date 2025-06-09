@@ -36,9 +36,9 @@ header {
 }
 
 .window-98 {
-    border-style: outset;
+    border-style: solid;
     border-width: 2px;
-    border-color: #404040;
+    border-color: #252525;
     border-top-color: #EFEFEF;
     border-left-color: #EFEFEF;
     width: 100%;

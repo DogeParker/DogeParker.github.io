@@ -4,7 +4,7 @@
 <title>Massive</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href='bigDrip.css' rel='stylesheet'>
+<link href='bub.css' rel='stylesheet'>
 <link rel='icon' type='image/x-icon' href="favicon2.ico">
 
 
@@ -13,48 +13,6 @@
 </style>
 
 <script>
-window.onload = function() {
-	var daysTotal;
-	var daysLeftMonth;
-	const d = new Date();
-	let month = d.getMonth();
-	daysTotal = 6 - d.getDate();
-	document.getElementById("month").innerHTML = daysTotal;
-};
-function randomNum() {
-	i = document.getElementById("rngInput").value;
-	let s = Math.floor((Math.random() * i) + 1);
-	document.getElementById("rngOutput").innerHTML = s;
-}
-function RPS(userInput) {
-	var i = userInput;
-	let k = Math.floor((Math.random() * 3) + 1)
-	if (i == k) {
-		var v = "It's a tie"
-	}
-	else if (i == 1 && k == 2 || i == 2 && k == 3 || i == 3 && k == 1) {
-		var v = "You Lose"
-	}
-	else if (i == 2 && k == 1 || i == 3 && k == 2 || i == 1 && k == 3) {
-		var v = "You Win"
-	}
-	function checkID(num) {
-		if (num == 1) {
-			bb = '&#9994'
-		}
-		else if (num == 2) {
-			bb = '&#9995'
-		}
-		else if (num == 3) {
-			bb = '&#9996'
-		}
-	}
-	document.getElementById("RPSOutput").innerHTML = v;
-	checkID(i)
-	document.getElementById("PlayerRPS").innerHTML = bb;
-	checkID(k)
-	document.getElementById("CpuRPS").innerHTML = bb;
-}
 function updateClock() {
   const now = new Date();
   let hours = now.getHours();
@@ -80,14 +38,33 @@ updateClock(); // run once on load
             <a href="about.html" class="navi">About</a>
         </header>
 
-        <div>
-            <div class="window-98" style="width: 320px; height: 160px; position: absolute; top: 300px; left: 100px;">
-                <div class="window-header">
-                    Windows 98 CD-ROM
-                </div>
-                <img src="book.png" class="icon">
-            </div>
-        </div>
+        
+		<div class="window-98" style="width: 320px; height: 160px; position: absolute; top: 300px; left: 100px; display: flex; flex-direction: column;">
+			<div class="window-header">
+				Windows 98 Demo
+			</div>
+			<div style="height: 100%; width: 100%; display: flex; flex: 1;">
+				<div>
+					<img src="book.png" class="icon" style="height: fit-content;">
+				</div>
+				<div>
+					<p style="font-size: small; color: black; margin-right: 6px;">
+						Welcome to my Windows 98 demo!<br><br>
+						This is the closest I can get to accurate Win98 stylings, but not neccisarily the closest possible, so expect some minor visual bugs :)
+					</p>
+				</div>
+			</div>
+		</div>
+        
+		<div class="window-98" style="width: 200px; height: 230px; position: absolute; top: 500px; left: 100px; display: flex; flex-direction: column;">
+			<div class="window-header">
+				<img src="mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+				Minesweeper
+			</div>
+			<div style="height: 100%; width: 100%; display: flex; flex: 1;">
+				
+			</div>
+		</div>
 
         <div class="t-container">
             <div class="taskbar">
