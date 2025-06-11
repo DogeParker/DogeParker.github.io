@@ -27,7 +27,6 @@ input[type=text] {
 	width: 115px;
 	margin-top: 5px;
 	padding: 3px;
-	border-radius: 5px;
 	border: inset;
 }
 h1 {
@@ -44,6 +43,7 @@ div.a {
 }
 button {
 	margin: 5px;
+	border-radius: 2px !important;
 	font-family: 'Roboto Mono';
 }
 p {
