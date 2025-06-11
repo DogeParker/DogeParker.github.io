@@ -17,35 +17,66 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener('DOMContentLoaded', () => {
+    let topZ = 10;
     document.querySelectorAll('.cls').forEach(btn => {
         btn.addEventListener('click', () => {
             const win = btn.closest('.window-98');
-            if (win) win.remove();
+            const material = win.animate([
+                {opacity: 1, transform: 'scale(1)'},
+                {opacity: 0, transform: 'scale(0.98)'}
+            ], {
+                duration: 80,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+            material.addEventListener('finish', () => {
+                win.remove();
+            })
         });
     });
-});
-document.querySelectorAll('.window-98').forEach(win => {
-	let isDragging = false;
-	let offsetX = 0;
-	let offsetY = 0;
+    document.querySelectorAll('.max').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const win = btn.closest('.window-98');
+            if (win) {
+                win.style.width = '100vw';
+                win.style.height = '100%';
+                win.style.top = 0;
+                win.style.left = 0;
+            }
+        });
+    });
 
-	const header = win.querySelector('.window-header') || win;
+    document.querySelectorAll('.window-98').forEach(win => {
+        topZ++;
+        win.style.zIndex = topZ++;
+        
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
 
-	header.style.cursor = 'move';
-	header.addEventListener('mousedown', e => {
-		isDragging = true;
-		offsetX = e.clientX - win.offsetLeft;
-		offsetY = e.clientY - win.offsetTop;
-	});
+        const header = win.querySelector('.window-header') || win;
 
-	document.addEventListener('mousemove', e => {
-		if (!isDragging) return;
-		win.style.left = (e.clientX - offsetX) + 'px';
-		win.style.top = (e.clientY - offsetY) + 'px';
-	});
+        header.style.cursor = 'move';
+        header.addEventListener('mousedown', e => {
+            isDragging = true;
+            offsetX = e.clientX - win.offsetLeft;
+            offsetY = e.clientY - win.offsetTop;
+        });
+        win.addEventListener('mousedown', e => {
+            topZ++;
+            win.style.zIndex = topZ;
+        })
 
-	document.addEventListener('mouseup', () => isDragging = false);
+        document.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            win.style.left = (e.clientX - offsetX) + 'px';
+            win.style.top = (e.clientY - offsetY) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => isDragging = false);
+    });
 });
 
 function updateClock() {
@@ -64,6 +95,11 @@ setInterval(updateClock, 1000);
 updateClock(); // run once on load
 </script>
 
+<!--
+    Big error minesweeper close button icon moves down on click, as opposed to
+    down and to the right to indicate the button being inset from being pressed
+-->
+
 </head>
 <body style="overflow: hidden;">
     <div style="display: flex; flex-direction: column; height: 100vh;;">
@@ -79,6 +115,12 @@ updateClock(); // run once on load
 			<div class="window-header" style="justify-items: center;">
                 <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
                 <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
+                    <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                        <img src="min.png" class="icon" style="width: 12px; height: 12px;">
+                    </button>
+                    <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                        <img src="max.png" class="icon" style="width: 12px; height: 12px;">
+                    </button>
                     <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
                         <img src="close.png" class="icon" style="width: 12px; height: 12px;">
                     </button>
@@ -97,7 +139,7 @@ updateClock(); // run once on load
 			</div>
 		</div>
         
-		<div class="window-98" style="width: 300px; height: 330px; position: absolute; top: 250px; left: 200px; display: flex; flex-direction: column;">
+		<div class="window-98" style="width: 300px; height: 330px; position: absolute; top: 250px; left: 470px; display: flex; flex-direction: column;">
 			<div class="window-header">
 				<img src="mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
 				Minesweeper
