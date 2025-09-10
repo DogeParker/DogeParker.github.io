@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Massive</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='bigDrip.css' rel='stylesheet'>
+<link rel='icon' type='image/x-icon' href="favicon2.ico">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+let cooldown = false;
+
+window.onload = function() {
+	const dayOfYear = (date) =>
+  		Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+	const year = new Date().getFullYear();
+	var daysTotal = ((2029 - year) * 365) + dayOfYear(new Date("2029-05-17")) - dayOfYear(new Date());
+	document.getElementById("month").innerHTML = daysTotal;
+};
+function randomNum() {
+	i = document.getElementById("rngInput").value;
+	let s = Math.floor((Math.random() * i) + 1);
+	document.getElementById("rngOutput").innerHTML = s;
+}
+
+function RPS(userInput) {
+	if (cooldown) return;
+
+	cooldown = true;
+	setTimeout(() => {cooldown = false;}, 1000);
+	var i = userInput;
+	let k = Math.floor((Math.random() * 3) + 1)
+	if (i == k) {
+		var v = "It's a tie"
+	}
+	else if (i == 1 && k == 2 || i == 2 && k == 3 || i == 3 && k == 1) {
+		var v = "You Lose"
+	}
+	else if (i == 2 && k == 1 || i == 3 && k == 2 || i == 1 && k == 3) {
+		var v = "You Win"
+		confetti();
+	}
+	function checkID(num) {
+		if (num == 1) {
+			return '&#9994';
+		}
+		else if (num == 2) {
+			return '&#9995'
+		}
+		else if (num == 3) {
+			return '&#9996'
+		}
+	}
+	document.getElementById("RPSOutput").innerHTML = v;
+	document.getElementById("PlayerRPS").innerHTML = checkID(i);
+	document.getElementById("CpuRPS").innerHTML = checkID(k);
+}
+</script>
+</head>
+<body>
+
+<header>
+	<h1 style="margin-bottom:-25px">Hi!</h1>
+	<h1 style="margin-bottom:-10px">I'm DogeParker</h1>
+	<h2 style="display:inline-block; margin-bottom:35px; color:#ce6e91;">and </h2>
+	<h2 class="website-text" style="display:inline-block; margin-bottom:35px; color:#ce6e91; flex-shrink: 1;">these are some of my projects</h2>
+	<div>
+		<a display="block" href="index.html" class="navi">Home</a>
+		<a href="projects.html" class="navi">Projects</a>
+		<a href="bub.html" class="navi">Demo</a>
+		<a href="about.html" class="navi">About</a>
+	</div>
+</header>
+
+</div>
+	<div style="align-items: center; padding: 5px; padding-left: 0;" class="inner-column">
+		<div class="container p-container">
+			<div class='window p-window'>
+				<h2>Days Until Graduation:</h2>
+				<div style="font-size: 52px;"class='a' id='month'></div>
+			</div>
+			<div class="window p-window">
+					<h2>Rock Paper Scissors</h2><br>
+				<div style="width: 100%;">
+					<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(1)">Rock</button>
+					<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(2)">Paper</button>
+					<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(3)">Scissors</button>
+				</div>
+				<p style="margin-left: 5px; margin-top: 32px;" id=RPSOutput></p>
+				<div class="rps-icons">
+					<p id="PlayerRPS"></p>
+					<p id="CpuRPS"></p>
+				</div>
+			</div>
+		</div>
+		<div class="container p-container">
+			<div class='window p-window'>
+				<h2>Random Number Generator</h2><br>
+				<div class="a">Enter an integer</div>
+				<div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+					<input style="flex: 1; margin-left: 0px;" placeholder="Type Here" type="text" id ="rngInput" name="rngInput"><br>
+					<button style="width: 90px; margin-right: 6px; margin-top: 8px; margin-left: 0px; border: inset; border-radius: 5px; height: 32px;" class="b" onclick="randomNum()">Generate</button><br>
+				</div>
+				<div style="margin-right: 5px; margin-top: 5px;" class="a">Your Number Is:</div>
+				<div class="a" id="rngOutput" style="margin-top: 5px;"></div>
+			</div>
+			<div class='window p-window'>
+				<h2>PathFinder...</h2>
+				<button onclick="location.href='pathfinder.html'" style="width: 60%; margin-right: 6px; margin-top: 6px; margin-left: 0px; border: inset; border-radius: 5px; height: 40px;">Find Your Dream Job!</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

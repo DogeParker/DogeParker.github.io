@@ -17,11 +17,10 @@
 let cooldown = false;
 
 window.onload = function() {
-	var daysTotal;
-	var daysLeftMonth;
-	const d = new Date();
-	let month = d.getMonth();
-	daysTotal = 24 - d.getDate();
+	const dayOfYear = (date) =>
+  		Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+	const year = new Date().getFullYear();
+	var daysTotal = ((2029 - year) * 365) + dayOfYear(new Date("2029-05-17")) - dayOfYear(new Date());
 	document.getElementById("month").innerHTML = daysTotal;
 };
 function randomNum() {
@@ -67,50 +66,56 @@ function RPS(userInput) {
 <body>
 
 <header>
-	<h1>Windoge Official Website</h1>
-	<a style="margin-right:14px" href="index.html" class="navi">Home</a>
-	<a style="margin-right:14px" href="bub.html" class="navi">Demo</a>
-	<a href="about.html" class="navi">About</a>
+	<h1 style="margin-bottom:-25px">Hi!</h1>
+	<h1 style="margin-bottom:-10px">I'm DogeParker</h1>
+	<h2 style="display:inline-block; margin-bottom:35px; color:#ce6e91;">and </h2>
+	<h2 class="website-text" style="display:inline-block; margin-bottom:35px; color:#ce6e91;">this is my website</h2>
+	<div>
+		<a display="block" href="index.html" class="navi">Home</a>
+		<a href="projects.html" class="navi">Projects</a>
+		<a href="bub.html" class="navi">Demo</a>
+		<a href="about.html" class="navi">About</a>
+	</div>
 </header>
 
 </div>
-<div style="padding: 5px; padding-left: 0;" class="inner-column">
-	<div class="container">
-		<div class='window'>
-			<h2>Days Left Until Summer Break:</h2>
-			<div style="font-size: 52px;"class='a' id='month'></div>
-		</div>
-		<div class="window">
-				<h2>Rock Paper Scissors</h2><br>
-			<div style="width: 100%;">
-				<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(1)">Rock</button>
-				<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(2)">Paper</button>
-				<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(3)">Scissors</button>
+	<div style="align-items: center; padding: 5px; padding-left: 0;" class="inner-column">
+		<div class="container">
+			<div class='window'>
+				<h2>Days Until Graduation:</h2>
+				<div style="font-size: 52px;"class='a' id='month'></div>
 			</div>
-			<p style="margin-left: 5px; margin-top: 32px;" id=RPSOutput></p>
-			<div class="rps-icons">
-				<p id="PlayerRPS"></p>
-				<p id="CpuRPS"></p>
+			<div class="window">
+					<h2>Rock Paper Scissors</h2><br>
+				<div style="width: 100%;">
+					<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(1)">Rock</button>
+					<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(2)">Paper</button>
+					<button style="border: inset; border-radius: 5px;" class="b" onclick="RPS(3)">Scissors</button>
+				</div>
+				<p style="margin-left: 5px; margin-top: 32px;" id=RPSOutput></p>
+				<div class="rps-icons">
+					<p id="PlayerRPS"></p>
+					<p id="CpuRPS"></p>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="container">
-		<div class='window'>
-			<h2>Random Number Generator</h2><br>
-			<div class="a">Enter an integer</div>
-			<div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-				<input style="flex: 1; margin-left: 0px;" placeholder="Type Here" type="text" id ="rngInput" name="rngInput"><br>
-				<button style="width: 30%; margin-right: 6px; margin-top: 8px; margin-left: 0px; border: inset; border-radius: 5px; height: 32px;" class="b" onclick="randomNum()">Generate</button><br>
+		<div class="container">
+			<div class='window'>
+				<h2>Random Number Generator</h2><br>
+				<div class="a">Enter an integer</div>
+				<div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+					<input style="flex: 1; margin-left: 0px;" placeholder="Type Here" type="text" id ="rngInput" name="rngInput"><br>
+					<button style="width: 90px; margin-right: 6px; margin-top: 8px; margin-left: 0px; border: inset; border-radius: 5px; height: 32px;" class="b" onclick="randomNum()">Generate</button><br>
+				</div>
+				<div style="margin-right: 5px; margin-top: 5px;" class="a">Your Number Is:</div>
+				<div class="a" id="rngOutput" style="margin-top: 5px;"></div>
 			</div>
-			<div style="margin-right: 5px; margin-top: 5px;" class="a">Your Number Is:</div>
-			<div class="a" id="rngOutput" style="margin-top: 5px;"></div>
-		</div>
-		<div class='window' style="width: 100%;">
-			<h2>PathFinder...</h2>
-			<button onclick="location.href='pathfinder.html'" style="width: 60%; margin-right: 6px; margin-top: 6px; margin-left: 0px; border: inset; border-radius: 5px; height: 40px;">Find Your Dream Job!</button>
+			<div class='window'>
+				<h2>PathFinder...</h2>
+				<button onclick="location.href='pathfinder.html'" style="width: 60%; margin-right: 6px; margin-top: 6px; margin-left: 0px; border: inset; border-radius: 5px; height: 40px;">Find Your Dream Job!</button>
+			</div>
 		</div>
 	</div>
 </div>
-
 </body>
 </html>

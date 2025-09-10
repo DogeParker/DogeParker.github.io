@@ -225,3 +225,29 @@ p {
         height: 0px;
     }
 }
+
+/* Add animation keyframes */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.website-text {
+	opacity: 0;
+	animation: fadeSlideDown 2s ease forwards;
+} 
+/* Apply animation to .window elements */
+
+a {
+  transition: color 0.5s ease;
+}
+
+a:hover {
+  color:#e48fae;
+}
