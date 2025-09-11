@@ -97,6 +97,10 @@ p {
 	justify-content: center;
 }
 
+.proj-header {
+	color: #ffb7ca;
+}
+
 .p-window {
 	flex: 1 1 100%;
 	max-height: 200px;
