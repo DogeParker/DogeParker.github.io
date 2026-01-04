@@ -109,7 +109,7 @@ header {
     border-bottom-color: #151515;
 }
 .smile:active img {
-    content: url('lose.png');
+    content: url('media/lose.png');
 }
 
 .start:hover {
@@ -210,9 +210,9 @@ p {
 }
 
 .mimg {
-    width: 100%;       /* scales image to fill the div horizontally */
-    height: auto;      /* keeps aspect ratio */
-    display: block;    /* removes bottom whitespace */
+    width: 100%;
+    height: auto; 
+    display: block;  
   }
 
 @keyframes close {
@@ -226,7 +226,6 @@ p {
     }
 }
 
-/* Add animation keyframes */
 @keyframes fadeSlideDown {
   from {
     opacity: 0;
@@ -242,7 +241,6 @@ p {
 	opacity: 0;
 	animation: fadeSlideDown 2s ease forwards;
 } 
-/* Apply animation to .window elements */
 
 a {
   transition: color 0.5s ease;

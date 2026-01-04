@@ -81,10 +81,21 @@ document.addEventListener('DOMContentLoaded', () => {
             win.style.zIndex = topZ;
         })
 
+        // keep window movement bounded to t-container
         document.addEventListener('mousemove', e => {
             if (!isDragging) return;
-            win.style.left = (e.clientX - offsetX) + 'px';
-            win.style.top = (e.clientY - offsetY) + 'px';
+            
+            const container = document.querySelector('.t-container');
+            const containerRect = container.getBoundingClientRect();
+            
+            let newLeft = e.clientX - offsetX;
+            let newTop = e.clientY - offsetY;
+            
+            newLeft = Math.max(0, Math.min(newLeft, containerRect.width - win.offsetWidth));
+            newTop = Math.max(0, Math.min(newTop, containerRect.height - win.offsetHeight));
+            
+            win.style.left = newLeft + 'px';
+            win.style.top = newTop + 'px';
         });
 
         document.addEventListener('mouseup', () => isDragging = false);
@@ -137,19 +148,19 @@ updateClock(); // run once on load
                     <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
                     <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
                         <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
-                            <img src="min.png" class="icon" style="width: 12px; height: 12px;">
+                            <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                         <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
-                            <img src="max.png" class="icon" style="width: 12px; height: 12px;">
+                            <img src="media/max.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                         <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px">
-                            <img src="close.png" class="icon" style="width: 12px; height: 12px;">
+                            <img src="media/close.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                     </div>
                 </div>
                 <div style="height: 100%; width: 100%; display: flex; flex: 1;">
                     <div>
-                        <img src="book.png" class="icon" style="height: fit-content;">
+                        <img src="media/book.png" class="icon" style="height: fit-content;">
                     </div>
                     <div>
                         <p style="font-size: small; color: black; margin-right: 6px;">
@@ -162,24 +173,24 @@ updateClock(); // run once on load
             
             <div class="window-98" style="width: 300px; height: 330px; position: absolute; top: 250px; left: 470px; display: flex; flex-direction: column;">
                 <div class="window-header">
-                    <img src="mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+                    <img src="media/mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
                     Minesweeper
                     <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
                         <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
-                            <img src="min.png" class="icon" style="width: 12px; height: 12px;">
+                            <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                         <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
-                            <img src="max.png" class="icon" style="width: 12px; height: 12px;">
+                            <img src="media/max.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                         <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px">
-                            <img src="close.png" class="icon" style="width: 12px; height: 12px;">
+                            <img src="media/close.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                     </div>
                 </div>
                 <div class="window-98" style="border-width: 4px; margin:4px; height: 100%; width: auto; display: flex; flex: 1; flex-direction: column;">
                     <div class="window-98" style="border-color: #404040; border-bottom-color: #EFEFEF; border-right-color: #EFEFEF; border-width: 4px; margin:4px; height: 25%; width: auto; display: flex; justify-content: center; align-items: center;">
                         <button class="start smile" style="margin:4px; height: 65%; display: flex; aspect-ratio: 1; width: auto;">
-                            <img src="play.png" alt="Smiley" class="mimg">
+                            <img src="media/play.png" alt="Smiley" class="mimg">
                         </button>
                     </div>
                     <div class="window-98" style="border-color: #404040; border-bottom-color: #EFEFEF; border-right-color: #EFEFEF;border-width: 4px; margin:4px; width: auto; display: flex; flex: 1;">
@@ -192,7 +203,7 @@ updateClock(); // run once on load
                 <div class="container">
                     <div class="t-container" style="height: 100%; justify-content: center;">
                         <button class="start" href="index.html">                            
-                            <img src="start-button.png" alt="Start Button" class="mimg" style="height: 16px;">                        
+                            <img src="media/start-button.png" alt="Start Button" class="mimg" style="height: 16px;">                        
                         </button>
                     </div>
                     <div class ="time" id="clock"></div>
