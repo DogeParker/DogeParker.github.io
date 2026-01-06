@@ -1,0 +1,191 @@
+* {
+	box-sizing: border-box;
+}
+html, body {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+body {
+	background-color:#2D394D;
+	line-height: 1;
+	font-family: 'Roboto Mono', 'sans-serif;';
+}
+header {
+	background-color: #1e2533;
+	padding: 30px;
+	text-align: left;
+}
+.navi {
+	font-size: 28px;
+	color:#A65D78;
+}
+input[type=text] {
+	font-family: 'Roboto Mono';
+	width: 115px;
+	margin-top: 5px;
+	padding: 3px;
+	border: inset;
+}
+h1 {
+	font-size: 50px;
+	color:#F27798;
+}
+h2 {
+	font-size: 28px;
+	color:#A65D78;
+}
+div.a {
+	font-size: 22px;
+	color:#F2F0F0;
+}
+button {
+	margin: 5px;
+	border-radius: 2px !important;
+	font-family: 'Roboto Mono';
+}
+p {
+	font-size: 22px;
+	color:#F2F0F0;
+}
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	width: 100%;
+	margin: 5px;
+	margin-top: 0;
+	gap: 5px; /* optional spacing between windows */
+	align-items: stretch;/* adjusts spacing between items */
+}
+
+.window {
+	flex: 1 1 calc(50% - 10px);
+	box-sizing: border-box;
+	border-radius: 15px;
+	padding: 20px;
+	height: 350px;
+	width: 90%;
+	max-width: 450px;
+	background: #384761;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	float: left;
+}
+
+#PlayerRPS, #CpuRPS {
+	font-size: 50px;
+}
+
+.rps-icons {
+	position: relative;
+	top: -40px;
+	display: flex;
+	gap: 10px;
+	font-size: 50px;
+}
+
+.p-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.proj-header {
+	color: #ffb7ca;
+}
+
+.p-window {
+	flex: 1 1 100%;
+	max-height: 200px;
+	max-width: 700px;
+}
+
+/* Add animation keyframes */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.website-text {
+	opacity: 0;
+	animation: fadeSlideDown 2s ease forwards;
+} 
+/* Apply animation to .window elements */
+
+a {
+  transition: color 0.5s ease;
+}
+
+a:hover {
+  color:#e48fae;
+}
+
+.p-window {
+  transition: max-width 0.4s ease;
+}
+
+.p-window:hover {
+  max-width: 720px;
+}
+
+@keyframes headerFloatRight {
+  from {
+    flex: 0;
+  }
+  to {
+    flex: 1;
+  }
+}
+
+.header-float-container {
+	display: flex; 
+	flex-direction: row;
+}
+
+.filler {
+  animation: headerFloatRight 2s ease-in-out forwards;
+}
+
+@media (max-width: 430px) {
+	.window {
+		flex: 1 1 100%;
+		min-height: 350px;
+		max-width: 350px;
+	}
+	.container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+}
+/*h1, h2, and links respectively*/
+.mobile-text-h1 {
+  	font-size: clamp(1.7rem, 10vw, 3.1rem);
+  	width: fit-content;
+  	max-width: 100%;
+  	white-space: nowrap;
+}
+.mobile-text-h2 {
+	font-size: clamp(.2rem, 5.4vw, 1.8rem);
+  	width: fit-content;
+  	max-width: 100%;
+  	white-space: nowrap;
+}
+.mobile-text-a {
+	font-size: clamp(.2rem, 4.8vw, 1.7rem);
+  	width: fit-content;
+  	max-width: 100%;
+  	white-space: nowrap;
+	margin-right: clamp(5px, 1vw, 100px);
+}
