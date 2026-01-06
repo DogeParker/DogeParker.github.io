@@ -4,9 +4,14 @@
 <title>Massive</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href='bub.css' rel='stylesheet'>
+<link href='demo.css' rel='stylesheet'>
 <link rel='icon' type='image/x-icon' href="favicon2.ico">
 
+<!--Important fixes:
+        1. Window dragging should only be allowed when not clicking on min, max, close, or image to far left of header
+        2. When dragging windows, images and text should not be highlighted
+        3. 
+-->
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
@@ -17,12 +22,15 @@
 </style>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
     let topZ = 10;
     document.querySelectorAll('.cls').forEach(btn => {
         btn.addEventListener('click', () => {
             const win = btn.closest('.window-98');
+
+            const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
+            if (taskbarBtn) taskbarBtn.remove();
+
             const material = win.animate([
                 {opacity: 1, transform: 'scale(1)'},
                 {opacity: 0, transform: 'scale(0.98)'}
@@ -40,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.max').forEach(btn => {
         btn.addEventListener('click', () => {
             const win = btn.closest('.window-98');
+            //keep original window size in old variables, change between maximized window and not
             if (win.style.width !== '100vw') {
                 const computed = getComputedStyle(win);
                 win.oldWidth = computed.width;
@@ -56,6 +65,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 win.style.height = win.oldHeight;
                 win.style.top = win.oldTop;
                 win.style.left = win.oldLeft;
+            }
+        });
+    });
+
+    document.querySelectorAll('.taskbar-window').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const windowId = btn.dataset.windowId;
+            const win = document.getElementById(windowId);
+            if (win) {
+                topZ++;
+                win.style.zIndex = topZ;
             }
         });
     });
@@ -79,6 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
         win.addEventListener('mousedown', e => {
             topZ++;
             win.style.zIndex = topZ;
+
+            //fix selected win in taskbar
+            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
+            const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
+            if (taskbarBtn) taskbarBtn.classList.add('active');
         })
 
         // keep window movement bounded to t-container
@@ -111,8 +139,9 @@ function updateClock() {
   hours = hours % 12;
   hours = hours ? hours : 12; // convert 0 to 12
   const minsStr = minutes < 10 ? '0' + minutes : minutes;
-
-  document.getElementById('clock').textContent = `${hours}:${minsStr} ${ampm}`;
+  if (document.getElementById('clock').textContent != `${hours}:${minsStr} ${ampm}`) {
+    document.getElementById('clock').textContent = `${hours}:${minsStr} ${ampm}`;
+  }
 }
 setInterval(updateClock, 1000);
 updateClock(); // run once on load
@@ -138,16 +167,16 @@ updateClock(); // run once on load
 </header>
 <body style="overflow: hidden;">
     <div style="display: flex; flex-direction: column; height: 100vh;;">
-        
 
         <!--make div that contains all windows, minus taskbar so that when setting
 		window 98 to maximize the window it doesnt take up header and taskbar as well :)-->
         <div style="position: relative" class="t-container">
-            <div class="window-98" style="width: 320px; height: 160px; position: absolute; top: 300px; left: 100px; display: flex; flex-direction: column;">
+            <div class="window-98" id="w1" style="width: 320px; height: 160px; position: absolute; top: 300px; left: 100px; display: flex; flex-direction: column;">
                 <div class="window-header" style="justify-items: center;">
+                    <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
                     <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
                     <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
-                        <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                        <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 0px; display: flex; align-items: center; justify-content: center;">
                             <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                         <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
@@ -171,12 +200,12 @@ updateClock(); // run once on load
                 </div>
             </div>
             
-            <div class="window-98" style="width: 300px; height: 330px; position: absolute; top: 250px; left: 470px; display: flex; flex-direction: column;">
+            <div class="window-98" id="w2" style="width: 300px; height: 330px; position: absolute; top: 250px; left: 470px; display: flex; flex-direction: column;">
                 <div class="window-header">
                     <img src="media/mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
                     Minesweeper
                     <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
-                        <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                        <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 0px; display: flex; align-items: center; justify-content: center;">
                             <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
                         <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
@@ -201,45 +230,36 @@ updateClock(); // run once on load
         </div>
         <div class="taskbar">
                 <div class="container">
-                    <div class="t-container" style="height: 100%; justify-content: center;">
+                    <div class="t-container" style="height: 100%; justify-content: center; flex-direction: row; justify-content: flex-start; align-items: center; padding-top: 2px;">
                         <button class="start" href="index.html">                            
                             <img src="media/start-button.png" alt="Start Button" class="mimg" style="height: 16px;">                        
                         </button>
+                        <div class="taskbar-divider">
+                            <div class="half1"></div>
+                            <div class="half2"></div>
+                        </div>
+                        
+                        <!-- windows on taskbar here -->
+                        <div class="taskbar-window-container">
+                            <div class="taskbar-window" data-window-id="w1">
+                                <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+                                Welcome to Windows 98
+                            </div>
+                            <div class="taskbar-window" data-window-id="w2">
+                                <img src="media/mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+                                Minesweeper
+                            </div>
+                        </div>
+
+                        <div class="taskbar-divider" style="margin-right: 3px">
+                            <div class="half2"></div>
+                            <div class="half1"></div>
+                        </div>
                     </div>
-                    <div class ="time" id="clock"></div>
+                    <div class ="time" id="clock" style="margin-top:1px; padding-top:1px"></div>
                 </div>
         </div>
     </div>
-
-<script>
-document.querySelectorAll('.window-98').forEach(win => {
-	let isDragging = false;
-	let offsetX = 0;
-	let offsetY = 0;
-
-	const header = win.querySelector('.window-header') || win;
-
-	header.style.cursor = 'move';
-	header.addEventListener('mousedown', e => {
-		isDragging = true;
-		offsetX = e.clientX - win.offsetLeft;
-		offsetY = e.clientY - win.offsetTop;
-		document.body.style.userSelect = 'none'; // disable text selection
-	});
-
-	document.addEventListener('mousemove', e => {
-		if (!isDragging) return;
-		win.style.left = (e.clientX - offsetX) + 'px';
-		win.style.top = (e.clientY - offsetY) + 'px';
-	});
-
-	document.addEventListener('mouseup', () => {
-		isDragging = false;
-		document.body.style.userSelect = ''; // re-enable text selection
-	});
-});
-</script>
-
 
 </body>
 </html>

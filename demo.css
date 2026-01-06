@@ -72,9 +72,11 @@ header {
     line-height: 18px;
     width: 80px;
     height: 22px;
-    border-style: inset;
-    color: #606060;
+    border-style: solid;
+    color: #353535;
     border-color: #E0E0E0;
+    border-top-color: #7c7c7c;
+    border-left-color: #7c7c7c;
     border-width: 2px;
     background-color: #c0c0c0;
 }
@@ -152,7 +154,7 @@ header {
 
 .taskbar {
     background-color: #c0c0c0;
-    height: 30px;
+    height: 32px;
     width: 100%;
     border-style: solid;
     border-color: #c0c0c0;
@@ -248,4 +250,61 @@ a {
 
 a:hover {
   color:#e48fae;
+}
+
+.half1 {
+    background-color:#EFEFEF;
+    width: 1px;
+    height: 20px;
+} 
+.half2 {
+    background-color:#727272;
+    width: 2px;
+    height: 20px;
+}
+
+.taskbar-divider {
+    float: left;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    font-size: small;
+    margin-left: -1px;
+    height: 24px;
+    width: 4px;
+}
+.taskbar-window-container {
+    flex: 1;
+    height: 100%;
+}
+.taskbar-window {
+    background-color: #c0c0c0;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #404040;
+    border-top-color: #EFEFEF;
+    border-left-color: #EFEFEF;
+    min-width: fit-content;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-left: 3px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    font-size: small;
+    margin-left: 2px;
+    line-height: 18px;
+    width: fit-content;
+    height: 24px;
+    color: black;
+    padding-right: 15px;
+    min-width: 190px; 
+}
+.taskbar-window.active {
+    padding-left: 4px;
+    padding-top: 3px;
+    border-left-color: #404040;
+    border-top-color: #404040;
+    border-bottom-color: #EFEFEF;
+    border-right-color: #EFEFEF;
 }
