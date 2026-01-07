@@ -4,6 +4,8 @@
 
 img {
     image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
 html, body {
@@ -312,7 +314,38 @@ a:hover {
 .minetile {
     margin: 0px !important;
     float: none !important;
-    width: 50px;
-    height: 50px;
+    width: 20px;
+    height: 20px;
 
+}
+.unclick {
+    background-color: #c0c0c0;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #404040;
+    border-top-color: #EFEFEF;
+    border-left-color: #EFEFEF;
+    min-width: fit-content;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-left: 3px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    font-size: small;
+    margin-left: 2px;
+    line-height: 18px;
+    width: fit-content;
+    height: 24px;
+}
+
+.flaggedTile {
+    background-image: url('media/flag.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.revealedTile {
+    border: none;
 }

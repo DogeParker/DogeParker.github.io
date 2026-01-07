@@ -9,7 +9,7 @@
 
 <!--Important fixes:
         1. Window dragging should only be allowed when not clicking on min, max, close, or image to far left of header
-        2. When dragging windows, images and text should not be highlighted
+        DONE -- 2. When dragging windows, images and text should not be highlighted
         3. 
 -->
 
@@ -18,139 +18,10 @@
 .navi {
     margin-right: 19px;
 }
-
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    let topZ = 10;
-    document.querySelectorAll('.cls').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const win = btn.closest('.window-98');
-
-            const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
-            if (taskbarBtn) taskbarBtn.remove();
-
-            const material = win.animate([
-                {opacity: 1, transform: 'scale(1)'},
-                {opacity: 0, transform: 'scale(0.98)'}
-            ], {
-                duration: 80,
-                easing: 'ease-out',
-                fill: 'forwards'
-            });
-            material.addEventListener('finish', () => {
-                win.remove();
-            })
-        });
-    });
-
-    document.querySelectorAll('.max').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const win = btn.closest('.window-98');
-            //keep original window size in old variables, change between maximized window and not
-            if (win.style.width !== '100vw') {
-                const computed = getComputedStyle(win);
-                win.oldWidth = computed.width;
-                win.oldHeight = computed.height;
-                win.oldTop = computed.top;
-                win.oldLeft = computed.left;
-                win.style.transition = '10ms';
-                win.style.width = '100vw';
-                win.style.height = '100%';
-                win.style.top = '0';
-                win.style.left = '0';
-            } else {
-                win.style.width = win.oldWidth;
-                win.style.height = win.oldHeight;
-                win.style.top = win.oldTop;
-                win.style.left = win.oldLeft;
-            }
-        });
-    });
-
-    document.querySelectorAll('.taskbar-window').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const windowId = btn.dataset.windowId;
-            const win = document.getElementById(windowId);
-            if (win) {
-                topZ++;
-                win.style.zIndex = topZ;
-            }
-        });
-    });
-
-    document.querySelectorAll('.window-98').forEach(win => {
-        topZ++;
-        win.style.zIndex = topZ++;
-        
-        let isDragging = false;
-        let offsetX = 0;
-        let offsetY = 0;
-
-        const header = win.querySelector('.window-header') || win;
-
-        header.style.cursor = 'move';
-        header.addEventListener('mousedown', e => {
-            isDragging = true;
-            offsetX = e.clientX - win.offsetLeft;
-            offsetY = e.clientY - win.offsetTop;
-        });
-        win.addEventListener('mousedown', e => {
-            topZ++;
-            win.style.zIndex = topZ;
-
-            //fix selected win in taskbar
-            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
-            const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
-            if (taskbarBtn) taskbarBtn.classList.add('active');
-        })
-
-        // keep window movement bounded to t-container
-        document.addEventListener('mousemove', e => {
-            if (!isDragging) return;
-            
-            const container = document.querySelector('.t-container');
-            const containerRect = container.getBoundingClientRect();
-            
-            let newLeft = e.clientX - offsetX;
-            let newTop = e.clientY - offsetY;
-            
-            newLeft = Math.max(0, Math.min(newLeft, containerRect.width - win.offsetWidth));
-            newTop = Math.max(0, Math.min(newTop, containerRect.height - win.offsetHeight));
-            
-            win.style.left = newLeft + 'px';
-            win.style.top = newTop + 'px';
-        });
-
-        document.addEventListener('mouseup', () => isDragging = false);
-    });
-});
-
-function updateClock() {
-  const now = new Date();
-  let hours = now.getHours();
-  const minutes = now.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  
-  hours = hours % 12;
-  hours = hours ? hours : 12; // convert 0 to 12
-  const minsStr = minutes < 10 ? '0' + minutes : minutes;
-  if (document.getElementById('clock').textContent != `${hours}:${minsStr} ${ampm}`) {
-    document.getElementById('clock').textContent = `${hours}:${minsStr} ${ampm}`;
-  }
-}
-setInterval(updateClock, 1000);
-updateClock(); // run once on load
-</script>
-
-<!--
-    Big error minesweeper close button icon moves down on click, as opposed to
-    down and to the right to indicate the button being inset from being pressed
--->
+<!-- Everything code -->
+<script src="demo.js" defer></script>
 
 </head>
 <header>
@@ -161,7 +32,7 @@ updateClock(); // run once on load
 	<div style="float:none">
 		<a display="block" href="index.html" class="navi">Home</a>
 		<a href="projects.html" class="navi">Projects</a>
-		<a href="bub.html" class="navi">Demo</a>
+		<a href="demo.html" class="navi">Demo</a>
 		<a href="about.html" class="navi">About</a>
 	</div>
 </header>
@@ -171,7 +42,7 @@ updateClock(); // run once on load
         <!--make div that contains all windows, minus taskbar so that when setting
 		window 98 to maximize the window it doesnt take up header and taskbar as well :)-->
         <div style="position: relative" class="t-container">
-            <div class="window-98" id="w1" style="width: 320px; height: 160px; position: absolute; top: 300px; left: 100px; display: flex; flex-direction: column;">
+            <div class="window-98" id="w1" style="width: 320px; height: 160px; position: absolute; top: 200px; left: 100px; display: flex; flex-direction: column;">
                 <div class="window-header" style="justify-items: center;">
                     <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
                     <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
@@ -200,7 +71,7 @@ updateClock(); // run once on load
                 </div>
             </div>
             
-            <div class="window-98" id="w2" style="width: 287px; height: 390px; position: absolute; top: 250px; left: 470px; display: flex; flex-direction: column;">
+            <div class="window-98" id="w2" style="width: 217px; height: 320px; position: absolute; top: 50px; left: 470px; display: flex; flex-direction: column;">
                 <div class="window-header">
                     <img src="media/mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
                     Minesweeper
@@ -208,9 +79,9 @@ updateClock(); // run once on load
                         <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 0px; display: flex; align-items: center; justify-content: center;">
                             <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
-                        <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                        <div class="unclick" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
                             <img src="media/max.png" class="icon" style="width: 12px; height: 12px;">
-                        </button>
+                        </div>
                         <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px">
                             <img src="media/close.png" class="icon" style="width: 12px; height: 12px;">
                         </button>
@@ -218,36 +89,22 @@ updateClock(); // run once on load
                 </div>
                 <div class="window-98" style="border-width: 4px; margin:4px; height: 100%; width: auto; display: flex; flex: 1; flex-direction: column;">
                     <div class="window-98" style="border-color: #404040; border-bottom-color: #EFEFEF; border-right-color: #EFEFEF; border-width: 4px; margin:4px; height: 75px; width: auto; display: flex; justify-content: center; align-items: center;">
+                        <div style="height: 37px; display: flex;">
+                           <img src="media/mine-time0.png" id="flags1">
+                           <img src="media/mine-time0.png" id="flags2"> 
+                           <img src="media/mine-time0.png" id="flags3"> 
+                        </div>
                         <button class="start smile" style="margin:4px; height: 65%; display: flex; aspect-ratio: 1; width: auto;">
-                            <img src="media/play.png" alt="Smiley" class="mimg">
+                            <img src="media/play.png" id='dude' alt="Smiley" class="mimg">
                         </button>
+                        <div style="height: 37px; display: flex;">
+                           <img src="media/mine-time0.png" id="timer1">
+                           <img src="media/mine-time0.png" id="timer2"> 
+                           <img src="media/mine-time0.png" id="timer3"> 
+                        </div>
                     </div>
-                    <div class="window-98" style="flex-wrap: wrap; border-color: #404040; border-bottom-color: #EFEFEF; border-right-color: #EFEFEF;border-width: 4px; margin:4px; width: auto; display: flex; flex: 1;">
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
-                        <div class="start minetile"></div>
+                    <div class="window-98" id="minegrid" style="flex-wrap: wrap; border-color: #404040; border-bottom-color: #EFEFEF; border-right-color: #EFEFEF;border-width: 4px; margin:4px; width: auto; display: flex; height: auto;">
+                        
                     </div>
                 </div>
             </div>
