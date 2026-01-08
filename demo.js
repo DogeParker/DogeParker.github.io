@@ -274,7 +274,7 @@ function stopTimer() {
     }
 }
 
-// Add event listener to smile button
+// dude button
 document.querySelector('.smile').addEventListener('click', () => {
     resetGame();
 });

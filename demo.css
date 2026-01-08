@@ -316,7 +316,9 @@ a:hover {
     float: none !important;
     width: 20px;
     height: 20px;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .unclick {
     background-color: #c0c0c0;
@@ -326,7 +328,7 @@ a:hover {
     border-top-color: #EFEFEF;
     border-left-color: #EFEFEF;
     min-width: fit-content;
-    padding-right: 4px;
+    padding-right: 3px;
     padding-top: 2px;
     padding-left: 3px;
     display: flex;
@@ -348,4 +350,6 @@ a:hover {
 
 .revealedTile {
     border: none;
+    align-content: center;
+    text-align: center;
 }
