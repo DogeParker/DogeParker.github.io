@@ -142,7 +142,7 @@ function revealTile(row, col) {
     const value = mine_matrix[row][col];
 
     if (value === -1) {
-        tile.innerHTML = '<img src="media/mine.png" style="width:12px; height:12px;" draggable="false">';
+        tile.innerHTML = '<img src="media/mineOG.png" style="width:20px; height:20px;" draggable="false">';
         document.getElementById('dude').src = 'media/lose.png'
         gameover = true;
         stopTimer();
@@ -159,6 +159,7 @@ function revealTile(row, col) {
 
     if (value > 0) {
         tile.textContent = value;
+        tile.innerHTML = `<img src="media/mineNum${value}.png" style="width:20px; height:20px;" draggable="false">`;
         return;
     } else {
         tile.textContent = "";

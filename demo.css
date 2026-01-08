@@ -314,6 +314,7 @@ a:hover {
 .minetile {
     margin: 0px !important;
     float: none !important;
+    padding: 0 !important;
     width: 20px;
     height: 20px;
     display: flex;
