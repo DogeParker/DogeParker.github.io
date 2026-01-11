@@ -1,6 +1,6 @@
 
-// Minesweeper code 
-let dimension = 9
+// Litty minesweeper code 
+let dimension = 8
 let flags = 0;
 let tilesRevealed = 0;
 let mines = 10;
@@ -109,7 +109,7 @@ function resetGame() {
         mine_matrix[Math.floor(ind / dimension)][ind % dimension] = -1;
     }
 
-    // recalc numbers
+    // recalc numbers andre you stink doo doo
     for (let i = 0; i < dimension; i++) {
         for (let j = 0; j < dimension; j++) {
             if (mine_matrix[i][j] !== -1) {
@@ -148,13 +148,11 @@ function revealTile(row, col) {
     }
 
     const tile = tiles[row][col];
-
     // stop recursion
     if (tile.classList.contains('revealedTile')) return;
     if (tile.classList.contains('flaggedTile')) return;
 
     tile.classList.add('revealedTile');
-
     const value = mine_matrix[row][col];
 
     if (value === -1) {
@@ -197,29 +195,6 @@ function revealTile(row, col) {
     }
 }
 
-/*document.querySelectorAll('.minetile').forEach(tile => {
-    tile.addEventListener('click', () => {
-        if (gameover) return;
-        const row = Number(tile.dataset.row);
-        const col = Number(tile.dataset.col);
-        revealTile(row, col);
-    });
-
-    tile.addEventListener('contextmenu', e => {
-        e.preventDefault();
-        if (gameover) return;
-        if (tile.classList.contains('revealedTile')) return;
-        tile.classList.toggle('flaggedTile');
-        if (tile.classList.contains('flaggedTile')) {
-            flags++;
-            updateFlags();
-        } else {
-            flags--;
-            updateFlags();
-        }
-    });
-});*/
-
 var mine_matrix = Array.from({ length: dimension }, () => Array(dimension).fill(null));
 for (let i=0; i<10; i++) {
     let ind = Math.floor(Math.random() * (dimension*dimension));
@@ -229,6 +204,7 @@ for (let i=0; i<10; i++) {
     mine_matrix[Math.floor(ind/dimension)][ind%dimension] = -1;
 }
 
+//yo this one 100% real you can tell cuz its peak
 for (let i=0; i<dimension; i++) {
     for (let j=0; j<dimension; j++) {
         if (mine_matrix[i][j] != -1) {

@@ -112,9 +112,6 @@ header {
     border-right-color: #151515;
     border-bottom-color: #151515;
 }
-.smile:active img {
-    content: url('media/lose.png');
-}
 
 .start:hover {
     background-color: #b8b8b8;
@@ -315,8 +312,8 @@ a:hover {
     margin: 0px !important;
     float: none !important;
     padding: 0 !important;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -354,4 +351,7 @@ a:hover {
     border-width: 0.1px;
     align-content: center;
     text-align: center;
+    box-shadow: 
+        inset -1.5px 0 0 #808080,
+        inset 0 -1.5px 0 #808080;
 }
