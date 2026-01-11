@@ -351,6 +351,7 @@ a:hover {
 
 .revealedTile {
     border: none;
+    border-width: 0.1px;
     align-content: center;
     text-align: center;
 }

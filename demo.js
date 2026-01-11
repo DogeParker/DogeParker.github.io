@@ -3,6 +3,7 @@
 let dimension = 9
 let flags = 0;
 let tilesRevealed = 0;
+let mines = 10;
 let gameover = false;
 const gridContainer = document.getElementById('minegrid');
 const tiles = Array.from({ length: dimension }, () => Array(dimension));
@@ -20,9 +21,19 @@ for (let i = 0; i < dimension; i++) {
 }
 
 function updateFlags() {
-    const digit1 = Math.floor(flags / 100) % 10;
-    const digit2 = Math.floor(flags / 10) % 10;
-    const digit3 = flags % 10;
+    console.log(mines-flags);
+    let digit1 = '';
+    let digit2 = '';
+    let digit3 = '';
+    if (mines-flags >= 0) {
+        digit1 = Math.floor((mines-flags) / 100) % 10;
+        digit2 = Math.floor((mines-flags) / 10) % 10;
+        digit3 = (mines-flags) % 10;
+    } else {
+        digit1 = '-neg';
+        digit2 = Math.floor(Math.abs(mines-flags) / 10) % 10;
+        digit3 = Math.abs(mines-flags) % 10;
+    }
     
     document.getElementById('flags1').src = `media/mine-time${digit1}.png`;
     document.getElementById('flags2').src = `media/mine-time${digit2}.png`;
@@ -51,6 +62,7 @@ function resetGame() {
 
     // clear grid
     gridContainer.innerHTML = '';
+    
 
     // rebuild tiles
     for (let i = 0; i < dimension; i++) {
@@ -83,7 +95,7 @@ function resetGame() {
             tiles[i][j] = tile;
         }
     }
-
+    
     // rebuild mine matrix
     mine_matrix = Array.from({ length: dimension }, () =>
         Array(dimension).fill(null)
@@ -121,8 +133,6 @@ function resetGame() {
             }
         }
     }
-
-    startTimer();
 }
 
 
@@ -130,6 +140,12 @@ function revealTile(row, col) {
     // bounds check
     console.log(`Revealing ${row},${col}`);
     if (row < 0 || row >= dimension || col < 0 || col >= dimension) return;
+    while (tilesRevealed == 0 && mine_matrix[row][col] == -1) {
+        resetGame();
+    }
+    if (tilesRevealed == 0) {
+        startTimer();
+    }
 
     const tile = tiles[row][col];
 
@@ -278,6 +294,7 @@ function stopTimer() {
 // dude button
 document.querySelector('.smile').addEventListener('click', () => {
     resetGame();
+    updateFlags();
 });
 
 let topZ = 10;
@@ -386,7 +403,6 @@ document.querySelectorAll('.window-98').forEach(win => {
 
     document.addEventListener('mouseup', () => isDragging = false);
 });
-startTimer();
 
 function updateClock() {
   const now = new Date();
