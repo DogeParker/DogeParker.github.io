@@ -352,6 +352,6 @@ a:hover {
     align-content: center;
     text-align: center;
     box-shadow: 
-        inset -1.5px 0 0 #808080,
-        inset 0 -1.5px 0 #808080;
+        inset -1.5px 0 0 #a5a5a5,
+        inset 0 -1.5px 0 #a5a5a5;
 }

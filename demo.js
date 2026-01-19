@@ -1,4 +1,25 @@
 
+let keyBuffer = '';
+let bufferTimeout;
+let loserMode = false;
+
+document.addEventListener('keydown', (e) => {
+    if (bufferTimeout) clearTimeout(bufferTimeout);
+    
+    keyBuffer += e.key.toLowerCase();
+    
+    if (keyBuffer.includes('loser')) {
+        loserMode = true; 
+        console.log('Loser mode:', loserMode);
+        keyBuffer = '';
+    }
+    
+    // clear buffer every 2 sec
+    bufferTimeout = setTimeout(() => {
+        keyBuffer = '';
+    }, 2000);
+});
+
 // Litty minesweeper code 
 let dimension = 8
 let flags = 0;
@@ -8,15 +29,98 @@ let gameover = false;
 const gridContainer = document.getElementById('minegrid');
 const tiles = Array.from({ length: dimension }, () => Array(dimension));
 
+// tiles surrounding check code is used twice
 
+updateFlags();
 for (let i = 0; i < dimension; i++) {
     for (let j = 0; j < dimension; j++) {
         const tile = document.createElement('div');
         tile.classList.add('start', 'minetile');
         tile.dataset.row = i;
         tile.dataset.col = j;
+        tile.addEventListener('click', () => {
+            if (gameover) return;
+                revealTile(i, j);
+        });
+        tile.addEventListener('contextmenu', e => {
+            e.preventDefault();
+            if (gameover) return;
+            if (tile.classList.contains('revealedTile')) return;
+
+            tile.classList.toggle('flaggedTile');
+
+            if (tile.classList.contains('flaggedTile')) {
+                flags++;
+            } else {
+                flags--;
+            }
+            updateFlags();
+        });
+        tile.addEventListener('auxclick', e => {
+            e.preventDefault();
+            if(!loserMode)return;
+
+            if (tile.classList.contains('revealedTile')) {
+                chordCheck(i, j);
+            }
+        });
         gridContainer.appendChild(tile);
         tiles[i][j] = tile;
+    }
+}
+//on allah this needs to be fixed
+function chordCheck(i, j) {
+    let count = 0;
+    if (i>0) {
+        if(tiles[i-1][j].classList.contains('flaggedTile'))count++;
+        if (j>0) {
+            if(tiles[i-1][j-1].classList.contains('flaggedTile'))count++;
+        }
+    }
+    if (j>0) {
+        if(tiles[i][j-1].classList.contains('flaggedTile'))count++;
+        if (i<dimension-1) {
+            if(tiles[i+1][j-1].classList.contains('flaggedTile'))count++;
+        }
+    }
+    if (i<dimension-1) {
+        if(tiles[i+1][j].classList.contains('flaggedTile')) count++;
+        if (j<dimension-1) {
+            if(tiles[i+1][j+1].classList.contains('flaggedTile'))count++;
+        }
+    }
+    if (j<dimension-1) {
+        if(tiles[i][j+1].classList.contains('flaggedTile')) count++;
+        if (i>0) {
+            if(tiles[i-1][j+1].classList.contains('flaggedTile'))count++;
+        }
+    }
+    console.log(`Flags: ${count}, Expected: ${mine_matrix[i][j]}, Match: ${count == mine_matrix[i][j]}`);
+    if(count == mine_matrix[i][j]) {
+        if (i>0) {
+            if(!(tiles[i-1][j].classList.contains('flaggedTile')))revealTile(i-1,j);
+            if (j>0) {
+                if(!(tiles[i-1][j-1].classList.contains('flaggedTile')))revealTile(i-1,j-1);
+            }
+        }
+        if (j>0) {
+            if(!(tiles[i][j-1].classList.contains('flaggedTile')))revealTile(i,j-1);
+            if (i<dimension-1) {
+                if(!(tiles[i+1][j-1].classList.contains('flaggedTile')))revealTile(i+1,j-1);
+            }
+        }
+        if (i<dimension-1) {
+            if(!(tiles[i+1][j].classList.contains('flaggedTile')))revealTile(i+1,j);
+            if (j<dimension-1) {
+                if(!(tiles[i+1][j+1].classList.contains('flaggedTile')))revealTile(i+1,j+1);
+            }
+        }
+        if (j<dimension-1) {
+            if(!(tiles[i][j+1].classList.contains('flaggedTile')))revealTile(i,j+1);
+            if (i>0) {
+                if(!(tiles[i-1][j+1].classList.contains('flaggedTile')))revealTile(i-1,j+1);
+            }
+        }
     }
 }
 
@@ -62,7 +166,7 @@ function resetGame() {
 
     // clear grid
     gridContainer.innerHTML = '';
-    
+    updateFlags();
 
     // rebuild tiles
     for (let i = 0; i < dimension; i++) {
@@ -90,7 +194,14 @@ function resetGame() {
                 }
                 updateFlags();
             });
+            tile.addEventListener('auxclick', e => {
+                e.preventDefault();
+                if(!loserMode)return;
 
+                if (tile.classList.contains('revealedTile')) {
+                    chordCheck(i, j);
+                }
+            });
             gridContainer.appendChild(tile);
             tiles[i][j] = tile;
         }
@@ -140,7 +251,7 @@ function revealTile(row, col) {
     // bounds check
     console.log(`Revealing ${row},${col}`);
     if (row < 0 || row >= dimension || col < 0 || col >= dimension) return;
-    while (tilesRevealed == 0 && mine_matrix[row][col] == -1) {
+    while (tilesRevealed == 0 && mine_matrix[row][col] != 0) {
         resetGame();
     }
     if (tilesRevealed == 0) {
@@ -154,6 +265,7 @@ function revealTile(row, col) {
 
     tile.classList.add('revealedTile');
     const value = mine_matrix[row][col];
+    tile.dataset.mineCount = value;
 
     if (value === -1) {
         tile.innerHTML = '<img src="media/mineOG.png" style="width:20px; height:20px;" draggable="false">';
