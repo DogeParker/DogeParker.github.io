@@ -36,6 +36,19 @@ header {
 	text-align: left;
 }
 
+.desktop-app {
+    width: 64px;
+    height: 64px;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #EFEFEF;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .icon {
     width: 40px;
     margin: 10px;
@@ -161,6 +174,7 @@ header {
 }
 
 .navi {
+    margin-right: 19px;
 	font-size: 28px;
 	color:#A65D78;
 }
@@ -204,10 +218,6 @@ p {
 	font-size: 22px;
 	color:#F2F0F0;
 	float: left;
-}
-
-.verta {
-    align-items: center;
 }
 
 .mimg {

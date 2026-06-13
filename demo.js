@@ -1,174 +1,291 @@
-
-let keyBuffer = '';
-let bufferTimeout;
-let loserMode = false;
-
-document.addEventListener('keydown', (e) => {
-    if (bufferTimeout) clearTimeout(bufferTimeout);
+function initMinesweeper(windowEl) {
+    const gridContainer = windowEl.querySelector('#minegrid');
+    // all your tile-building, mine_matrix setup, etc. goes here
+    // using windowEl.querySelector() instead of document.getElementById()
     
-    keyBuffer += e.key.toLowerCase();
-    
-    if (keyBuffer.includes('loser')) {
-        loserMode = true; 
-        console.log('Loser mode:', loserMode);
-        keyBuffer = '';
-    }
-    
-    // clear buffer every 2 sec
-    bufferTimeout = setTimeout(() => {
-        keyBuffer = '';
-    }, 2000);
-});
+    // start of minesweeper
+    // dimension is both height and width of minesweeper tiles 
+    let dimension = 8
+    // number of current flags placed on board
+    let flags = 0;
+    // number of current tiles revealed on board
+    let tilesRevealed = 0;
+    let mines = 10;
+    let gameover = false;
+    const tiles = Array.from({ length: dimension }, () => Array(dimension));
+    let timerInterval = null;
+    let seconds = 0;
+    var mine_matrix = Array.from({ length: dimension }, () => Array(dimension).fill(null));
 
-// Litty minesweeper code 
-let dimension = 8
-let flags = 0;
-let tilesRevealed = 0;
-let mines = 10;
-let gameover = false;
-const gridContainer = document.getElementById('minegrid');
-const tiles = Array.from({ length: dimension }, () => Array(dimension));
 
-// tiles surrounding check code is used twice
+    //on allah this needs to be fixed
+    const coordinates = ((-1,-1),(-1,0),(-1,1),
+                        (0,-1),         (0,1),
+                        (1,-1),  (1,0), (1,1));
 
-updateFlags();
-for (let i = 0; i < dimension; i++) {
-    for (let j = 0; j < dimension; j++) {
-        const tile = document.createElement('div');
-        tile.classList.add('start', 'minetile');
-        tile.dataset.row = i;
-        tile.dataset.col = j;
-        tile.addEventListener('click', () => {
-            if (gameover) return;
-                revealTile(i, j);
-        });
-        tile.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            if (gameover) return;
-            if (tile.classList.contains('revealedTile')) return;
-
-            tile.classList.toggle('flaggedTile');
-
-            if (tile.classList.contains('flaggedTile')) {
-                flags++;
-            } else {
-                flags--;
-            }
-            updateFlags();
-        });
-        tile.addEventListener('auxclick', e => {
-            e.preventDefault();
-            if(!loserMode)return;
-
-            if (tile.classList.contains('revealedTile')) {
-                chordCheck(i, j);
-            }
-        });
-        gridContainer.appendChild(tile);
-        tiles[i][j] = tile;
-    }
-}
-//on allah this needs to be fixed
-function chordCheck(i, j) {
-    let count = 0;
-    if (i>0) {
-        if(tiles[i-1][j].classList.contains('flaggedTile'))count++;
-        if (j>0) {
-            if(tiles[i-1][j-1].classList.contains('flaggedTile'))count++;
-        }
-    }
-    if (j>0) {
-        if(tiles[i][j-1].classList.contains('flaggedTile'))count++;
-        if (i<dimension-1) {
-            if(tiles[i+1][j-1].classList.contains('flaggedTile'))count++;
-        }
-    }
-    if (i<dimension-1) {
-        if(tiles[i+1][j].classList.contains('flaggedTile')) count++;
-        if (j<dimension-1) {
-            if(tiles[i+1][j+1].classList.contains('flaggedTile'))count++;
-        }
-    }
-    if (j<dimension-1) {
-        if(tiles[i][j+1].classList.contains('flaggedTile')) count++;
+    function chordCheck(i, j) {
+        let count = 0;
         if (i>0) {
-            if(tiles[i-1][j+1].classList.contains('flaggedTile'))count++;
-        }
-    }
-    console.log(`Flags: ${count}, Expected: ${mine_matrix[i][j]}, Match: ${count == mine_matrix[i][j]}`);
-    if(count == mine_matrix[i][j]) {
-        if (i>0) {
-            if(!(tiles[i-1][j].classList.contains('flaggedTile')))revealTile(i-1,j);
+            if(tiles[i-1][j].classList.contains('flaggedTile'))count++;
             if (j>0) {
-                if(!(tiles[i-1][j-1].classList.contains('flaggedTile')))revealTile(i-1,j-1);
+                if(tiles[i-1][j-1].classList.contains('flaggedTile'))count++;
             }
         }
         if (j>0) {
-            if(!(tiles[i][j-1].classList.contains('flaggedTile')))revealTile(i,j-1);
+            if(tiles[i][j-1].classList.contains('flaggedTile'))count++;
             if (i<dimension-1) {
-                if(!(tiles[i+1][j-1].classList.contains('flaggedTile')))revealTile(i+1,j-1);
+                if(tiles[i+1][j-1].classList.contains('flaggedTile'))count++;
             }
         }
         if (i<dimension-1) {
-            if(!(tiles[i+1][j].classList.contains('flaggedTile')))revealTile(i+1,j);
+            if(tiles[i+1][j].classList.contains('flaggedTile')) count++;
             if (j<dimension-1) {
-                if(!(tiles[i+1][j+1].classList.contains('flaggedTile')))revealTile(i+1,j+1);
+                if(tiles[i+1][j+1].classList.contains('flaggedTile'))count++;
             }
         }
         if (j<dimension-1) {
-            if(!(tiles[i][j+1].classList.contains('flaggedTile')))revealTile(i,j+1);
+            if(tiles[i][j+1].classList.contains('flaggedTile')) count++;
             if (i>0) {
-                if(!(tiles[i-1][j+1].classList.contains('flaggedTile')))revealTile(i-1,j+1);
+                if(tiles[i-1][j+1].classList.contains('flaggedTile'))count++;
+            }
+        }
+        console.log(`Flags: ${count}, Expected: ${mine_matrix[i][j]}, Match: ${count == mine_matrix[i][j]}`);
+        if(count == mine_matrix[i][j]) {
+            if (i>0) {
+                if(!(tiles[i-1][j].classList.contains('flaggedTile')))revealTile(i-1,j);
+                if (j>0) {
+                    if(!(tiles[i-1][j-1].classList.contains('flaggedTile')))revealTile(i-1,j-1);
+                }
+            }
+            if (j>0) {
+                if(!(tiles[i][j-1].classList.contains('flaggedTile')))revealTile(i,j-1);
+                if (i<dimension-1) {
+                    if(!(tiles[i+1][j-1].classList.contains('flaggedTile')))revealTile(i+1,j-1);
+                }
+            }
+            if (i<dimension-1) {
+                if(!(tiles[i+1][j].classList.contains('flaggedTile')))revealTile(i+1,j);
+                if (j<dimension-1) {
+                    if(!(tiles[i+1][j+1].classList.contains('flaggedTile')))revealTile(i+1,j+1);
+                }
+            }
+            if (j<dimension-1) {
+                if(!(tiles[i][j+1].classList.contains('flaggedTile')))revealTile(i,j+1);
+                if (i>0) {
+                    if(!(tiles[i-1][j+1].classList.contains('flaggedTile')))revealTile(i-1,j+1);
+                }
             }
         }
     }
-}
 
-function updateFlags() {
-    console.log(mines-flags);
-    let digit1 = '';
-    let digit2 = '';
-    let digit3 = '';
-    if (mines-flags >= 0) {
-        digit1 = Math.floor((mines-flags) / 100) % 10;
-        digit2 = Math.floor((mines-flags) / 10) % 10;
-        digit3 = (mines-flags) % 10;
-    } else {
-        digit1 = '-neg';
-        digit2 = Math.floor(Math.abs(mines-flags) / 10) % 10;
-        digit3 = Math.abs(mines-flags) % 10;
+    function updateFlags() {
+        let digit1 = '';
+        let digit2 = '';
+        let digit3 = '';
+        if (mines-flags >= 0) {
+            digit1 = Math.floor((mines-flags) / 100) % 10;
+            digit2 = Math.floor((mines-flags) / 10) % 10;
+            digit3 = (mines-flags) % 10;
+        } else {
+            digit1 = '-neg';
+            digit2 = Math.floor(Math.abs(mines-flags) / 10) % 10;
+            digit3 = Math.abs(mines-flags) % 10;
+        }
+        
+        windowEl.querySelector('#flags1').src = `media/mine-time${digit1}.png`;
+        windowEl.querySelector('#flags2').src = `media/mine-time${digit2}.png`;
+        windowEl.querySelector('#flags3').src = `media/mine-time${digit3}.png`;
     }
-    
-    document.getElementById('flags1').src = `media/mine-time${digit1}.png`;
-    document.getElementById('flags2').src = `media/mine-time${digit2}.png`;
-    document.getElementById('flags3').src = `media/mine-time${digit3}.png`;
-}
 
-function resetGame() {
-    gameover = false;
-    tilesRevealed = 0;
-    flags = 0;
+    function resetGame() {
+        gameover = false;
+        tilesRevealed = 0;
+        flags = 0;
 
-    // reset face
-    document.getElementById('dude').src = 'media/play.png';
+        // reset face
+        windowEl.querySelector('#dude').src = 'media/play.png';
 
-    // stop + reset timer
-    stopTimer();
-    seconds = 0;
-    document.getElementById('timer1').src = 'media/mine-time0.png';
-    document.getElementById('timer2').src = 'media/mine-time0.png';
-    document.getElementById('timer3').src = 'media/mine-time0.png';
+        // stop + reset timer
+        stopTimer();
+        seconds = 0;
+        windowEl.querySelector('#timer1').src = 'media/mine-time0.png';
+        windowEl.querySelector('#timer2').src = 'media/mine-time0.png';
+        windowEl.querySelector('#timer3').src = 'media/mine-time0.png';
 
-    // reset flags
-    document.getElementById('flags1').src = 'media/mine-time0.png';
-    document.getElementById('flags2').src = 'media/mine-time0.png';
-    document.getElementById('flags3').src = 'media/mine-time0.png';
+        // reset flags
+        windowEl.querySelector('#flags1').src = 'media/mine-time0.png';
+        windowEl.querySelector('#flags2').src = 'media/mine-time0.png';
+        windowEl.querySelector('#flags3').src = 'media/mine-time0.png';
 
-    // clear grid
-    gridContainer.innerHTML = '';
+        // clear grid
+        gridContainer.innerHTML = '';
+        updateFlags();
+
+        // rebuild tiles
+        for (let i = 0; i < dimension; i++) {
+            for (let j = 0; j < dimension; j++) {
+                const tile = document.createElement('div');
+                tile.classList.add('start', 'minetile');
+                tile.dataset.row = i;
+                tile.dataset.col = j;
+                tile.addEventListener('click', () => {
+                    if (gameover) return;
+                        revealTile(i, j);
+                });
+
+                tile.addEventListener('contextmenu', e => {
+                    e.preventDefault();
+                    if (gameover) return;
+                    if (tile.classList.contains('revealedTile')) return;
+
+                    tile.classList.toggle('flaggedTile');
+
+                    if (tile.classList.contains('flaggedTile')) {
+                        flags++;
+                    } else {
+                        flags--;
+                    }
+                    updateFlags();
+                });
+                tile.addEventListener('auxclick', e => {
+                    e.preventDefault();
+
+                    if (tile.classList.contains('revealedTile')) {
+                        chordCheck(i, j);
+                    }
+                });
+                gridContainer.appendChild(tile);
+                tiles[i][j] = tile;
+            }
+        }
+        
+        // rebuild mine matrix
+        mine_matrix = Array.from({ length: dimension }, () =>
+            Array(dimension).fill(null)
+        );
+
+        for (let i = 0; i < 10; i++) {
+            let ind = Math.floor(Math.random() * (dimension * dimension));
+            while (mine_matrix[Math.floor(ind / dimension)][ind % dimension] != null) {
+                ind = Math.floor(Math.random() * (dimension * dimension));
+            }
+            mine_matrix[Math.floor(ind / dimension)][ind % dimension] = -1;
+        }
+
+        // recalc numbers andre you stink doo doo
+        for (let i = 0; i < dimension; i++) {
+            for (let j = 0; j < dimension; j++) {
+                if (mine_matrix[i][j] !== -1) {
+                    let count = 0;
+                    for (let di = -1; di <= 1; di++) {
+                        for (let dj = -1; dj <= 1; dj++) {
+                            const ni = i + di;
+                            const nj = j + dj;
+                            if (
+                                ni >= 0 &&
+                                ni < dimension &&
+                                nj >= 0 &&
+                                nj < dimension &&
+                                mine_matrix[ni][nj] === -1
+                            ) {
+                                count++;
+                            }
+                        }
+                    }
+                    mine_matrix[i][j] = count;
+                }
+            }
+        }
+    }
+
+
+    function revealTile(row, col) {
+        // bounds check
+        console.log(`Revealing ${row},${col}`);
+        if (row < 0 || row >= dimension || col < 0 || col >= dimension) return;
+        while (tilesRevealed == 0 && mine_matrix[row][col] != 0) {
+            resetGame();
+        }
+        if (tilesRevealed == 0) {
+            startTimer();
+        }
+
+        const tile = tiles[row][col];
+        // stop recursion
+        if (tile.classList.contains('revealedTile')) return;
+        if (tile.classList.contains('flaggedTile')) return;
+
+        tile.classList.add('revealedTile');
+        const value = mine_matrix[row][col];
+        tile.dataset.mineCount = value;
+
+        if (value === -1) {
+            tile.innerHTML = '<img src="media/mineOG.png" style="width:20px; height:20px;" draggable="false">';
+            windowEl.querySelector('#dude').src = 'media/lose.png'
+            gameover = true;
+            stopTimer();
+            return;
+        }
+
+        tilesRevealed++;
+
+        if (tilesRevealed === dimension * dimension - 10) {
+            windowEl.querySelector('#dude').src = 'media/win.png'
+            gameover = true;
+            stopTimer();
+        }
+
+        if (value > 0) {
+            tile.textContent = value;
+            tile.innerHTML = `<img src="media/mineNum${value}.png" style="width:20px; height:20px;" draggable="false">`;
+            return;
+        } else {
+            tile.textContent = "";
+            // flood-fill neighbors safely
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr !== 0 || dc !== 0) {
+                        const ni = row + dr;
+                        const nj = col + dc;
+                        if (ni >= 0 && ni < dimension && nj >= 0 && nj < dimension) {
+                            const neighbor = tiles[ni][nj];
+                            if (!neighbor.classList.contains('revealedTile')) {
+                                revealTile(ni, nj);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function updateTimer() {
+        seconds++;
+        const digit1 = Math.floor(seconds / 100) % 10;
+        const digit2 = Math.floor(seconds / 10) % 10;
+        const digit3 = seconds % 10;
+        
+        windowEl.querySelector('#timer1').src = `media/mine-time${digit1}.png`;
+        windowEl.querySelector('#timer2').src = `media/mine-time${digit2}.png`;
+        windowEl.querySelector('#timer3').src = `media/mine-time${digit3}.png`;
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        seconds = -1;
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    // tiles surrounding check code is used twice
     updateFlags();
-
-    // rebuild tiles
     for (let i = 0; i < dimension; i++) {
         for (let j = 0; j < dimension; j++) {
             const tile = document.createElement('div');
@@ -179,7 +296,6 @@ function resetGame() {
                 if (gameover) return;
                     revealTile(i, j);
             });
-
             tile.addEventListener('contextmenu', e => {
                 e.preventDefault();
                 if (gameover) return;
@@ -196,7 +312,6 @@ function resetGame() {
             });
             tile.addEventListener('auxclick', e => {
                 e.preventDefault();
-                if(!loserMode)return;
 
                 if (tile.classList.contains('revealedTile')) {
                     chordCheck(i, j);
@@ -206,246 +321,118 @@ function resetGame() {
             tiles[i][j] = tile;
         }
     }
-    
-    // rebuild mine matrix
-    mine_matrix = Array.from({ length: dimension }, () =>
-        Array(dimension).fill(null)
-    );
 
-    for (let i = 0; i < 10; i++) {
-        let ind = Math.floor(Math.random() * (dimension * dimension));
-        while (mine_matrix[Math.floor(ind / dimension)][ind % dimension] != null) {
-            ind = Math.floor(Math.random() * (dimension * dimension));
+    for (let i=0; i<10; i++) {
+        let ind = Math.floor(Math.random() * (dimension*dimension));
+        while (mine_matrix[Math.floor(ind/dimension)][ind%dimension] != null) {
+            ind = Math.floor(Math.random() * (dimension*dimension));
         }
-        mine_matrix[Math.floor(ind / dimension)][ind % dimension] = -1;
+        mine_matrix[Math.floor(ind/dimension)][ind%dimension] = -1;
     }
-
-    // recalc numbers andre you stink doo doo
-    for (let i = 0; i < dimension; i++) {
-        for (let j = 0; j < dimension; j++) {
-            if (mine_matrix[i][j] !== -1) {
+    
+    //yo this one 100% real (not ai) you can tell cuz its peak
+    for (let i=0; i<dimension; i++) {
+        for (let j=0; j<dimension; j++) {
+            if (mine_matrix[i][j] != -1) {
                 let count = 0;
-                for (let di = -1; di <= 1; di++) {
-                    for (let dj = -1; dj <= 1; dj++) {
-                        const ni = i + di;
-                        const nj = j + dj;
-                        if (
-                            ni >= 0 &&
-                            ni < dimension &&
-                            nj >= 0 &&
-                            nj < dimension &&
-                            mine_matrix[ni][nj] === -1
-                        ) {
-                            count++;
-                        }
-                    }
-                }
-                mine_matrix[i][j] = count;
-            }
-        }
-    }
-}
-
-
-function revealTile(row, col) {
-    // bounds check
-    console.log(`Revealing ${row},${col}`);
-    if (row < 0 || row >= dimension || col < 0 || col >= dimension) return;
-    while (tilesRevealed == 0 && mine_matrix[row][col] != 0) {
-        resetGame();
-    }
-    if (tilesRevealed == 0) {
-        startTimer();
-    }
-
-    const tile = tiles[row][col];
-    // stop recursion
-    if (tile.classList.contains('revealedTile')) return;
-    if (tile.classList.contains('flaggedTile')) return;
-
-    tile.classList.add('revealedTile');
-    const value = mine_matrix[row][col];
-    tile.dataset.mineCount = value;
-
-    if (value === -1) {
-        tile.innerHTML = '<img src="media/mineOG.png" style="width:20px; height:20px;" draggable="false">';
-        document.getElementById('dude').src = 'media/lose.png'
-        gameover = true;
-        stopTimer();
-        return;
-    }
-
-    tilesRevealed++;
-
-    if (tilesRevealed === dimension * dimension - 10) {
-        document.getElementById('dude').src = 'media/win.png'
-        gameover = true;
-        stopTimer();
-    }
-
-    if (value > 0) {
-        tile.textContent = value;
-        tile.innerHTML = `<img src="media/mineNum${value}.png" style="width:20px; height:20px;" draggable="false">`;
-        return;
-    } else {
-        tile.textContent = "";
-        // flood-fill neighbors safely
-        for (let dr = -1; dr <= 1; dr++) {
-            for (let dc = -1; dc <= 1; dc++) {
-                if (dr !== 0 || dc !== 0) {
-                    const ni = row + dr;
-                    const nj = col + dc;
-                    if (ni >= 0 && ni < dimension && nj >= 0 && nj < dimension) {
-                        const neighbor = tiles[ni][nj];
-                        if (!neighbor.classList.contains('revealedTile')) {
-                            revealTile(ni, nj);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-var mine_matrix = Array.from({ length: dimension }, () => Array(dimension).fill(null));
-for (let i=0; i<10; i++) {
-    let ind = Math.floor(Math.random() * (dimension*dimension));
-    while (mine_matrix[Math.floor(ind/dimension)][ind%dimension] != null) {
-        ind = Math.floor(Math.random() * (dimension*dimension));
-    }
-    mine_matrix[Math.floor(ind/dimension)][ind%dimension] = -1;
-}
-
-//yo this one 100% real you can tell cuz its peak
-for (let i=0; i<dimension; i++) {
-    for (let j=0; j<dimension; j++) {
-        if (mine_matrix[i][j] != -1) {
-            let count = 0;
-            if (i>0) {
-                if(mine_matrix[i-1][j] == -1)count++;
-                if (j>0) {
-                    if(mine_matrix[i-1][j-1] == -1)count++;
-                }
-            }
-            if (j>0) {
-                if(mine_matrix[i][j-1] == -1)count++;
-                if (i<dimension-1) {
-                    if(mine_matrix[i+1][j-1] == -1)count++;
-                }
-            }
-            if (i<dimension-1) {
-                if(mine_matrix[i+1][j] == -1) count++;
-                if (j<dimension-1) {
-                    if(mine_matrix[i+1][j+1] == -1)count++;
-                }
-            }
-            if (j<dimension-1) {
-                if(mine_matrix[i][j+1] == -1) count++;
                 if (i>0) {
-                    if(mine_matrix[i-1][j+1] == -1)count++;
+                    if(mine_matrix[i-1][j] == -1)count++;
+                    if (j>0) {
+                        if(mine_matrix[i-1][j-1] == -1)count++;
+                    }
                 }
+                if (j>0) {
+                    if(mine_matrix[i][j-1] == -1)count++;
+                    if (i<dimension-1) {
+                        if(mine_matrix[i+1][j-1] == -1)count++;
+                    }
+                }
+                if (i<dimension-1) {
+                    if(mine_matrix[i+1][j] == -1) count++;
+                    if (j<dimension-1) {
+                        if(mine_matrix[i+1][j+1] == -1)count++;
+                    }
+                }
+                if (j<dimension-1) {
+                    if(mine_matrix[i][j+1] == -1) count++;
+                    if (i>0) {
+                        if(mine_matrix[i-1][j+1] == -1)count++;
+                    }
+                }
+                mine_matrix[i][j]=count;
             }
-            mine_matrix[i][j]=count;
         }
     }
+    windowEl.querySelector('.smile').addEventListener('click', () => {
+        resetGame();
+        updateFlags();
+    });
+    console.log(gridContainer);
 }
-
-
-let timerInterval = null;
-let seconds = 0;
-
-function updateTimer() {
-    seconds++;
-    const digit1 = Math.floor(seconds / 100) % 10;
-    const digit2 = Math.floor(seconds / 10) % 10;
-    const digit3 = seconds % 10;
-    
-    document.getElementById('timer1').src = `media/mine-time${digit1}.png`;
-    document.getElementById('timer2').src = `media/mine-time${digit2}.png`;
-    document.getElementById('timer3').src = `media/mine-time${digit3}.png`;
-}
-
-function startTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    seconds = -1;
-    updateTimer();
-    timerInterval = setInterval(updateTimer, 1000);
-}
-
-function stopTimer() {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
-}
-
-// dude button
-document.querySelector('.smile').addEventListener('click', () => {
-    resetGame();
-    updateFlags();
-});
 
 let topZ = 10;
-document.querySelectorAll('.cls').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const win = btn.closest('.window-98');
 
-        const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
-        if (taskbarBtn) taskbarBtn.remove();
+function initWindow(win) {
+    // drag logic, .cls listener, .max listener, etc.
+    win.querySelectorAll('.cls').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const win = btn.closest('.window-98');
 
-        const material = win.animate([
-            {opacity: 1, transform: 'scale(1)'},
-            {opacity: 0, transform: 'scale(0.98)'}
-        ], {
-            duration: 80,
-            easing: 'ease-out',
-            fill: 'forwards'
+            const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
+            if (taskbarBtn) taskbarBtn.remove();
+
+            const material = win.animate([
+                {opacity: 1, transform: 'scale(1)'},
+                {opacity: 0, transform: 'scale(0.98)'}
+            ], {
+                duration: 80,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+            material.addEventListener('finish', () => {
+                win.remove();
+            })
         });
-        material.addEventListener('finish', () => {
-            win.remove();
-        })
     });
-});
 
-document.querySelectorAll('.max').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const win = btn.closest('.window-98');
-        //keep original window size in old variables, change between maximized window and not
-        if (win.style.width !== '100vw') {
-            const computed = getComputedStyle(win);
-            win.oldWidth = computed.width;
-            win.oldHeight = computed.height;
-            win.oldTop = computed.top;
-            win.oldLeft = computed.left;
-            win.style.transition = '10ms';
-            win.style.width = '100vw';
-            win.style.height = '100%';
-            win.style.top = '0';
-            win.style.left = '0';
-        } else {
-            win.style.width = win.oldWidth;
-            win.style.height = win.oldHeight;
-            win.style.top = win.oldTop;
-            win.style.left = win.oldLeft;
-        }
+    win.querySelectorAll('.max').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const win = btn.closest('.window-98');
+            //keep original window size in old variables, change between maximized window and not
+            if (win.style.width !== '100vw') {
+                const computed = getComputedStyle(win);
+                win.oldWidth = computed.width;
+                win.oldHeight = computed.height;
+                win.oldTop = computed.top;
+                win.oldLeft = computed.left;
+                win.style.transition = '10ms';
+                win.style.width = '100vw';
+                win.style.height = '100%';
+                win.style.top = '0';
+                win.style.left = '0';
+            } else {
+                win.style.width = win.oldWidth;
+                win.style.height = win.oldHeight;
+                win.style.top = win.oldTop;
+                win.style.left = win.oldLeft;
+            }
+        });
     });
-});
 
-document.querySelectorAll('.taskbar-window').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    win.querySelectorAll('.taskbar-window').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-        const windowId = btn.dataset.windowId;
-        const win = document.getElementById(windowId);
-        if (win) {
-            topZ++;
-            win.style.zIndex = topZ;
-        }
+            const windowId = btn.dataset.windowId;
+            const win = document.getElementById(windowId);
+            if (win) {
+                topZ++;
+                win.style.zIndex = topZ;
+            }
+        });
     });
-});
 
-document.querySelectorAll('.window-98').forEach(win => {
     topZ++;
     win.style.zIndex = topZ++;
     
@@ -463,6 +450,7 @@ document.querySelectorAll('.window-98').forEach(win => {
         offsetY = e.clientY - win.offsetTop;
     });
     win.addEventListener('mousedown', e => {
+        e.preventDefault();
         topZ++;
         win.style.zIndex = topZ;
 
@@ -490,6 +478,27 @@ document.querySelectorAll('.window-98').forEach(win => {
     });
 
     document.addEventListener('mouseup', () => isDragging = false);
+}
+
+setInterval(updateClock, 1000);
+updateClock(); // run once on load
+
+document.querySelectorAll('.window-98').forEach(initWindow);
+
+document.querySelectorAll('.desktop-app').forEach(desktopApp => {
+    desktopApp.addEventListener('dblclick', e => {
+        if (document.querySelector('.minesweeper-window')) return;
+        if (!desktopApp.querySelector('.minesweeper-ind')) return;
+        const clone = document.getElementById('minesweeper-template').content.cloneNode(true);
+        const win = clone.querySelector('.window-98');
+        win.classList.add('minesweeper-window'); // use a class instead of id to check existence
+        document.querySelector('.t-container').appendChild(clone);
+        initWindow(document.querySelector('.minesweeper-window'));
+        initMinesweeper(document.querySelector('.minesweeper-window'));
+    });
+    desktopApp.addEventListener('mousedown', e => {
+        e.preventDefault();
+    });
 });
 
 function updateClock() {
@@ -505,5 +514,3 @@ function updateClock() {
     document.getElementById('clock').textContent = `${hours}:${minsStr} ${ampm}`;
   }
 }
-setInterval(updateClock, 1000);
-updateClock(); // run once on load
