@@ -1,3 +1,39 @@
+function initFromDesktop() {
+    //check if there is a minesweeper window open already
+    if (document.querySelector('.minesweeper-window')) return;
+    //check if the app being double clicked is minesweeper
+    if (!desktopApp.querySelector('.minesweeper-ind')) return;
+
+    //initialize a clone from the template of the minesweeper window
+    const clone = document.getElementById('minesweeper-template').content.cloneNode(true);
+    const win = clone.querySelector('.window-98');
+    
+    //add class to check for existence of window
+    win.classList.add('minesweeper-window'); 
+
+    //actually place the taskbar tab
+    document.querySelector('.t-container').appendChild(clone);
+
+    //initialize the event handling
+    initWindow(document.querySelector('.minesweeper-window'));
+    initMinesweeper(document.querySelector('.minesweeper-window'))
+
+    //for adding minesweeper to taskbar
+    const taskbarClone = document.getElementById('minesweeper-taskbar-template').content.cloneNode(true);
+    document.querySelector('.taskbar-window-container').appendChild(taskbarClone);
+
+    const winEl = document.querySelector('.minesweeper-window');
+    const btn = document.querySelector('.taskbar-window-container').lastElementChild;
+    winEl._taskbarBtn = btn;
+    btn.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        topZ++;
+        winEl.style.zIndex = topZ;
+    });
+}
+
 function initMinesweeper(windowEl) {
     const gridContainer = windowEl.querySelector('#minegrid');
     // all your tile-building, mine_matrix setup, etc. goes here
@@ -17,62 +53,30 @@ function initMinesweeper(windowEl) {
     let seconds = 0;
     var mine_matrix = Array.from({ length: dimension }, () => Array(dimension).fill(null));
 
-
-    //on allah this needs to be fixed
-    const coordinates = ((-1,-1),(-1,0),(-1,1),
-                        (0,-1),         (0,1),
-                        (1,-1),  (1,0), (1,1));
-
     function chordCheck(i, j) {
+        //rewrote chord check
         let count = 0;
-        if (i>0) {
-            if(tiles[i-1][j].classList.contains('flaggedTile'))count++;
-            if (j>0) {
-                if(tiles[i-1][j-1].classList.contains('flaggedTile'))count++;
+        for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+                if (dx === 0 && dy === 0) continue;
+                const nx = i + dx;
+                const ny = j + dy;
+                if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension) {
+                    if (tiles[nx][ny].classList.contains('flaggedTile')) count++;
+                }
             }
         }
-        if (j>0) {
-            if(tiles[i][j-1].classList.contains('flaggedTile'))count++;
-            if (i<dimension-1) {
-                if(tiles[i+1][j-1].classList.contains('flaggedTile'))count++;
-            }
-        }
-        if (i<dimension-1) {
-            if(tiles[i+1][j].classList.contains('flaggedTile')) count++;
-            if (j<dimension-1) {
-                if(tiles[i+1][j+1].classList.contains('flaggedTile'))count++;
-            }
-        }
-        if (j<dimension-1) {
-            if(tiles[i][j+1].classList.contains('flaggedTile')) count++;
-            if (i>0) {
-                if(tiles[i-1][j+1].classList.contains('flaggedTile'))count++;
-            }
-        }
+        
         console.log(`Flags: ${count}, Expected: ${mine_matrix[i][j]}, Match: ${count == mine_matrix[i][j]}`);
         if(count == mine_matrix[i][j]) {
-            if (i>0) {
-                if(!(tiles[i-1][j].classList.contains('flaggedTile')))revealTile(i-1,j);
-                if (j>0) {
-                    if(!(tiles[i-1][j-1].classList.contains('flaggedTile')))revealTile(i-1,j-1);
-                }
-            }
-            if (j>0) {
-                if(!(tiles[i][j-1].classList.contains('flaggedTile')))revealTile(i,j-1);
-                if (i<dimension-1) {
-                    if(!(tiles[i+1][j-1].classList.contains('flaggedTile')))revealTile(i+1,j-1);
-                }
-            }
-            if (i<dimension-1) {
-                if(!(tiles[i+1][j].classList.contains('flaggedTile')))revealTile(i+1,j);
-                if (j<dimension-1) {
-                    if(!(tiles[i+1][j+1].classList.contains('flaggedTile')))revealTile(i+1,j+1);
-                }
-            }
-            if (j<dimension-1) {
-                if(!(tiles[i][j+1].classList.contains('flaggedTile')))revealTile(i,j+1);
-                if (i>0) {
-                    if(!(tiles[i-1][j+1].classList.contains('flaggedTile')))revealTile(i-1,j+1);
+            for (let dx = -1; dx <= 1; dx++) {
+                for (let dy = -1; dy <= 1; dy++) {
+                    if (dx === 0 && dy === 0) continue;
+                    const nx = i + dx;
+                    const ny = j + dy;
+                    if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension) {
+                        if (!(tiles[nx][ny].classList.contains('flaggedTile')))revealTile(nx,ny);
+                    }
                 }
             }
         }
@@ -335,28 +339,14 @@ function initMinesweeper(windowEl) {
         for (let j=0; j<dimension; j++) {
             if (mine_matrix[i][j] != -1) {
                 let count = 0;
-                if (i>0) {
-                    if(mine_matrix[i-1][j] == -1)count++;
-                    if (j>0) {
-                        if(mine_matrix[i-1][j-1] == -1)count++;
-                    }
-                }
-                if (j>0) {
-                    if(mine_matrix[i][j-1] == -1)count++;
-                    if (i<dimension-1) {
-                        if(mine_matrix[i+1][j-1] == -1)count++;
-                    }
-                }
-                if (i<dimension-1) {
-                    if(mine_matrix[i+1][j] == -1) count++;
-                    if (j<dimension-1) {
-                        if(mine_matrix[i+1][j+1] == -1)count++;
-                    }
-                }
-                if (j<dimension-1) {
-                    if(mine_matrix[i][j+1] == -1) count++;
-                    if (i>0) {
-                        if(mine_matrix[i-1][j+1] == -1)count++;
+                for (let dx = -1; dx <= 1; dx++) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        if (dx === 0 && dy === 0) continue;
+                        const nx = i + dx;
+                        const ny = j + dy;
+                        if (nx >= 0 && nx < dimension && ny >= 0 && ny < dimension) {
+                            if (mine_matrix[nx][ny] == -1) count++;
+                        }
                     }
                 }
                 mine_matrix[i][j]=count;
@@ -378,8 +368,7 @@ function initWindow(win) {
         btn.addEventListener('click', () => {
             const win = btn.closest('.window-98');
 
-            const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
-            if (taskbarBtn) taskbarBtn.remove();
+            if (win._taskbarBtn) win._taskbarBtn.remove();
 
             const material = win.animate([
                 {opacity: 1, transform: 'scale(1)'},
@@ -425,7 +414,7 @@ function initWindow(win) {
             btn.classList.add('active');
 
             const windowId = btn.dataset.windowId;
-            const win = document.getElementById(windowId);
+            const win = document.querySelector(`.${windowId}`);
             if (win) {
                 topZ++;
                 win.style.zIndex = topZ;
@@ -456,8 +445,10 @@ function initWindow(win) {
 
         //fix selected win in taskbar
         document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
-        const taskbarBtn = document.querySelector(`[data-window-id="${win.id}"]`);
-        if (taskbarBtn) taskbarBtn.classList.add('active');
+        if (win._taskbarBtn) {
+            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
+            win._taskbarBtn.classList.add('active');
+        }
     })
 
     // keep window movement bounded to t-container
@@ -487,14 +478,39 @@ document.querySelectorAll('.window-98').forEach(initWindow);
 
 document.querySelectorAll('.desktop-app').forEach(desktopApp => {
     desktopApp.addEventListener('dblclick', e => {
+        //check if there is a minesweeper window open already
         if (document.querySelector('.minesweeper-window')) return;
+        //check if the app being double clicked is minesweeper
         if (!desktopApp.querySelector('.minesweeper-ind')) return;
+
+        //initialize a clone from the template of the minesweeper window
         const clone = document.getElementById('minesweeper-template').content.cloneNode(true);
         const win = clone.querySelector('.window-98');
-        win.classList.add('minesweeper-window'); // use a class instead of id to check existence
+        
+        //add class to check for existence of window
+        win.classList.add('minesweeper-window'); 
+
+        //actually place the taskbar tab
         document.querySelector('.t-container').appendChild(clone);
+
+        //initialize the event handling
         initWindow(document.querySelector('.minesweeper-window'));
-        initMinesweeper(document.querySelector('.minesweeper-window'));
+        initMinesweeper(document.querySelector('.minesweeper-window'))
+
+        //for adding minesweeper to taskbar
+        const taskbarClone = document.getElementById('minesweeper-taskbar-template').content.cloneNode(true);
+        document.querySelector('.taskbar-window-container').appendChild(taskbarClone);
+
+        const winEl = document.querySelector('.minesweeper-window');
+        const btn = document.querySelector('.taskbar-window-container').lastElementChild;
+        winEl._taskbarBtn = btn;
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            topZ++;
+            winEl.style.zIndex = topZ;
+        });
     });
     desktopApp.addEventListener('mousedown', e => {
         e.preventDefault();
