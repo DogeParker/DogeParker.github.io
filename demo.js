@@ -134,7 +134,10 @@ function initMinesweeper(windowEl) {
                 tile.dataset.col = j;
                 tile.addEventListener('click', () => {
                     if (gameover) return;
-                        revealTile(i, j);
+                    revealTile(i, j);
+                    if (tile.classList.contains('revealedTile')) {
+                        chordCheck(i, j);
+                    }
                 });
 
                 tile.addEventListener('contextmenu', e => {
@@ -298,7 +301,10 @@ function initMinesweeper(windowEl) {
             tile.dataset.col = j;
             tile.addEventListener('click', () => {
                 if (gameover) return;
-                    revealTile(i, j);
+                revealTile(i, j);
+                if (tile.classList.contains('revealedTile')) {
+                    chordCheck(i, j);
+                }
             });
             tile.addEventListener('contextmenu', e => {
                 e.preventDefault();
