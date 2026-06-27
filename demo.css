@@ -226,6 +226,34 @@ p {
     display: block;  
   }
 
+.explorer-bar {
+    font-size:smaller; 
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    border-color: #404040; 
+    height: 26px; 
+    width: 100%; 
+    border-width: 1.5px; 
+    border-left-color: #EFEFEF; 
+    border-top-color: #EFEFEF; 
+    border-style:solid"
+}
+
+.explorer-header {
+    margin-left: 14px;
+}
+
+.explorer-tool-icon {
+    width: 45px; 
+    font-size: small; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    margin-left: 5px;
+    margin-top: 2px;
+}
+
 @keyframes close {
     from {
         width: 100%;
