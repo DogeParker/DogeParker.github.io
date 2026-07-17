@@ -1,67 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Massive</title>
+<title>Website</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href='main.css' rel='stylesheet'>
-<link rel='icon' type='image/x-icon' href="favicon2.ico">
+<link rel='icon' type='image/x-icon' href="media/favicon2.ico">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<script>
-let cooldown = false;
-
-window.onload = function() {
-	const dayOfYear = (date) =>
-  		Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-	const year = new Date().getFullYear();
-	var daysTotal = ((2029 - year) * 365) + dayOfYear(new Date("2029-05-17")) - dayOfYear(new Date());
-	document.getElementById("month").innerHTML = daysTotal;
-};
-function randomNum() {
-	i = document.getElementById("rngInput").value;
-	let s = Math.floor((Math.random() * i) + 1);
-	document.getElementById("rngOutput").innerHTML = s;
-}
-
-function RPS(userInput) {
-	if (cooldown) return;
-
-	cooldown = true;
-	setTimeout(() => {cooldown = false;}, 1000);
-	var i = userInput;
-	let k = Math.floor((Math.random() * 3) + 1)
-	if (i == k) {
-		var v = "It's a tie"
-	}
-	else if (i == 1 && k == 2 || i == 2 && k == 3 || i == 3 && k == 1) {
-		var v = "You Lose"
-	}
-	else if (i == 2 && k == 1 || i == 3 && k == 2 || i == 1 && k == 3) {
-		var v = "You Win"
-		confetti();
-	}
-	function checkID(num) {
-		if (num == 1) {
-			return '&#9994';
-		}
-		else if (num == 2) {
-			return '&#9995'
-		}
-		else if (num == 3) {
-			return '&#9996'
-		}
-	}
-	document.getElementById("RPSOutput").innerHTML = v;
-	document.getElementById("PlayerRPS").innerHTML = checkID(i);
-	document.getElementById("CpuRPS").innerHTML = checkID(k);
-}
-</script>
 </head>
 <body>
 
@@ -94,7 +43,10 @@ function RPS(userInput) {
 			<a href="you_are_squar.exe" style="text-decoration: none; margin:0; align-items: left;" class='window p-window' download>
 				<h2 class="proj-header" style="margin-top: 5px; margin-bottom:15px">You are Square</h2>
 				<div style="font-size: 22px;" class="a">AP Computer Science final project</div>
-				<a href="you_are_squar.exe"></a>
+			</a>
+			<a href="index.html" style="text-decoration: none; margin:0; align-items: left;" class='window p-window'>
+				<h2 class="proj-header" style="margin-top: 5px; margin-bottom:15px">This Very Website</h2>
+				<div style="font-size: 22px;" class="a">Yes, the one you are on right now!</div>
 			</a>
 		</div>
 	</div>

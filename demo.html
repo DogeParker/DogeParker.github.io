@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Massive</title>
+<title>Website</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href='demo.css' rel='stylesheet'>
-<link rel='icon' type='image/x-icon' href="favicon2.ico">
+<link rel='icon' type='image/x-icon' href="media/favicon2.ico">
 
 <!--Important fixes:
         DONE -- 1. Window dragging should only be allowed when not clicking on 
@@ -77,7 +77,7 @@
 
             <!--windows-->
             <template id="about-template">
-                <div class="window-98" id="infoWindow" style="width: 320px; height: 160px; position: absolute; top: 200px; left: 100px; display: flex; flex-direction: column;">
+                <div class="window-98" id="infoWindow" style="width: 320px; height: 170px; position: absolute; top: 200px; left: 100px; display: flex; flex-direction: column;">
                     <div class="window-header" style="justify-items: center;">
                         <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
                         <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
@@ -101,6 +101,7 @@
                             <p style="font-size: small; color: black; margin-right: 6px;">
                                 Welcome to my Windows 98 demo!<br><br>
                                 This is the closest I can get to accurate Win98 stylings, but not necessarily the closest possible faithful recreation of Win98's inner workings, so expect some minor visual bugs :)
+                                Also... I have additionally found out that firefox hates fun scrollbars so if you use firefox, keep that in mind while browsing
                             </p>
                         </div>
                     </div>
@@ -221,22 +222,65 @@
                             A<u>d</u>dress
                             </div>
 
-                            <div class="window-98" style="display: flex; align-items: center; background-color: #EFEFEF; margin: 6px; border-color: #404040; width: 100%; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; border-style:solid">
+                            <div class="window-98" style="display: flex; align-items: center; background-color: #ffffff; margin: 6px; border-color: #404040; width: 100%; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; border-style:solid">
                                 <img src="media/computer_explorer-1.png" class="icon" style="height: 16px; width: 16px; margin-left: 1px; margin-right: 5px;">
                                 My Computer
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="window-98" style="background-color: #EFEFEF; flex: 1; width:auto; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px">
-                        
+                <div class="window-98" style="background-color: #ffffff; flex: 1; width:auto; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px">
+                    <img src="media/wvleft.bmp" class="icon" style="margin-top: -0.5px; margin-left: -0.5px; flex:1; max-height: 175px; width: 180px">
                 </div>
                 <div class="window-98" style="height: 24px; width:auto; border-color: #404040;border-bottom-color: #EFEFEF;border-right-color: #EFEFEF; margin:2px">
-                        
+                    
                 </div>
                 
             </div>
             </template>
+
+            <!--Notepad-->
+
+            <div class="window-98" id="explorerWindow" style="width: 560px; height: 350px; position: absolute; top: 230px; left: 110px; display: flex; flex-direction: column;">
+                <div class="window-header" style="justify-items: center;">
+                    <img src="media/notepad-3.png" class="icon" style="height: 16px; width: 16px; margin-left: 0; margin-right: 2px;">
+                    <p id="notepad-title" style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%; margin-right: 5px;"></p>
+                    <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;"> - Notepad</p>
+                    <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
+                        <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 0px; display: flex; align-items: center; justify-content: center;">
+                            <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
+                        </button>
+                        <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                            <img src="media/max.png" class="icon" style="width: 12px; height: 12px;">
+                        </button>
+                        <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px">
+                            <img src="media/close.png" class="icon" style="width: 12px; height: 12px;">
+                        </button>
+                    </div>
+                </div>
+                <div class="explorer-bar" style="margin-left: -6px; margin-bottom: -2px;">
+                    <div class="explorer-header">
+                        <u>F</u>ile
+                    </div>
+                    <div class="explorer-header">
+                        <u>E</u>dit
+                    </div>
+                    <div class="explorer-header">
+                        <u>S</u>earch
+                    </div>
+                    <div class="explorer-header">
+                        <u>H</u>elp
+                    </div>
+                </div>
+                <div class="window-98" style="background-color: #ffffff; flex: 1; width:auto; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px">
+                    <!-- The container to display the text contents -->
+                    <textarea href="My Computer/server.txt" class="txt-output" style="margin: 2px; height: 99.5%;" ></textarea>
+                
+                </div>
+            </div>
+
+            <!--Minesweeper-->
+
             <template id="minesweeper-template">
                 <div class="window-98" id="minesweeperWindow" style="width: 237px; height: 320px; position: absolute; top: 50px; left: 470px; display: flex; flex-direction: column;">
                     <div class="window-header">

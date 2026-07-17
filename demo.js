@@ -403,17 +403,25 @@ function initWindow(win) {
 
     header.style.cursor = 'move';
     header.addEventListener('pointerdown', e => {
-        e.preventDefault(); //prevents text and image highlighting while dragging
+        const tag = e.target.tagName;
+        const isEditable = tag === 'TEXTAREA' || tag === 'INPUT' || e.target.isContentEditable;
+
+        if (!isEditable) {
+            e.preventDefault();
+        }
         isDragging = true;
         offsetX = e.clientX - win.offsetLeft;
         offsetY = e.clientY - win.offsetTop;
     });
     win.addEventListener('pointerdown', e => {
-        e.preventDefault();
+        const tag = e.target.tagName;
+        const isEditable = tag === 'TEXTAREA' || tag === 'INPUT' || e.target.isContentEditable;
+
+        if (!isEditable) {
+            e.preventDefault();
+        }
         topZ++;
         win.style.zIndex = topZ;
-
-        //fix selected win in taskbar
         document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
         if (win._taskbarBtn) {
             document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
@@ -535,6 +543,7 @@ document.querySelectorAll('.desktop-app').forEach(desktopApp => {
         if (desktopApp.querySelector('.about-icon')) {
             aboutWindow.doubleClickHandler(desktopApp);
         }
+        //make it work like this
         for (let i=0; i<WindowList.length; i++) {
             if (desktopApp.querySelector)
             WindowList[i].window().doubleClickHandler(desktopApp)
@@ -564,6 +573,25 @@ const explorerWindow = new Window('.explorer-icon', '.explorer-window' , 'explor
 const aboutWindow = new Window('.about-icon', '.about-window' , 'about-template', 'about-taskbar-template');
 
 const WindowList = [];
-WindowList.appendChild(minesweeperWindow);
-WindowList.appendChild(explorerWindow);
-WindowList.appendChild(aboutWindow);
+WindowList.push(minesweeperWindow);
+WindowList.push(explorerWindow);
+WindowList.push(aboutWindow);
+
+
+document.querySelectorAll('.txt-output').forEach(box => {
+    const filePath = box.getAttribute('href');
+    fetch(filePath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text(); // Convert the file content to plain text
+        })
+        .then(data => {
+            box.value = data;
+            document.getElementById('notepad-title').textContent = filePath.slice(12)
+        })
+        .catch(error => {
+            console.error('Error reading the file:', error);
+        });
+});
