@@ -37,14 +37,15 @@ header {
 }
 
 .desktop-app {
-    width: 64px;
+    width: 84px;
     height: 64px;
     margin-top: 5px;
-    margin-left: 10px;
+    margin-left: 5px;
     margin-bottom: 10px;
     font-size: 14px;
     color: #EFEFEF;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
 }
@@ -52,6 +53,10 @@ header {
 .icon {
     width: 40px;
     margin: 10px;
+}
+
+.desktop-icon-wrapper  {
+    flex-wrap: wrap;
 }
 
 .window-98 {
@@ -73,7 +78,8 @@ header {
     padding-left: 3px;
     color: #EFEFEF;
     font-size: 14px;
-    background: linear-gradient(to right, #020B87, #0F83CF)
+    background: linear-gradient(to right, #020B87, #0F83CF);
+    touch-action: none;
 }
 
 .time {
@@ -158,6 +164,7 @@ header {
 
 .t-container {
     display: flex;
+    align-content: flex-start;
     flex-direction: column;
     justify-content: flex-end;
     flex-grow: 1;

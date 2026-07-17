@@ -1,39 +1,3 @@
-function initFromDesktop() {
-    //check if there is a minesweeper window open already
-    if (document.querySelector('.minesweeper-window')) return;
-    //check if the app being double clicked is minesweeper
-    if (!desktopApp.querySelector('.minesweeper-ind')) return;
-
-    //initialize a clone from the template of the minesweeper window
-    const clone = document.getElementById('minesweeper-template').content.cloneNode(true);
-    const win = clone.querySelector('.window-98');
-    
-    //add class to check for existence of window
-    win.classList.add('minesweeper-window'); 
-
-    //actually place the taskbar tab
-    document.querySelector('.t-container').appendChild(clone);
-
-    //initialize the event handling
-    initWindow(document.querySelector('.minesweeper-window'));
-    initMinesweeper(document.querySelector('.minesweeper-window'))
-
-    //for adding minesweeper to taskbar
-    const taskbarClone = document.getElementById('minesweeper-taskbar-template').content.cloneNode(true);
-    document.querySelector('.taskbar-window-container').appendChild(taskbarClone);
-
-    const winEl = document.querySelector('.minesweeper-window');
-    const btn = document.querySelector('.taskbar-window-container').lastElementChild;
-    winEl._taskbarBtn = btn;
-    btn.addEventListener('click', e => {
-        e.preventDefault();
-        document.querySelectorAll('.taskbar-window').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        topZ++;
-        winEl.style.zIndex = topZ;
-    });
-}
-
 function initMinesweeper(windowEl) {
     const gridContainer = windowEl.querySelector('#minegrid');
     // all your tile-building, mine_matrix setup, etc. goes here
@@ -172,11 +136,11 @@ function initMinesweeper(windowEl) {
         );
 
         for (let i = 0; i < 10; i++) {
-            let ind = Math.floor(Math.random() * (dimension * dimension));
-            while (mine_matrix[Math.floor(ind / dimension)][ind % dimension] != null) {
-                ind = Math.floor(Math.random() * (dimension * dimension));
+            let icon = Math.floor(Math.random() * (dimension * dimension));
+            while (mine_matrix[Math.floor(icon / dimension)][icon % dimension] != null) {
+                icon = Math.floor(Math.random() * (dimension * dimension));
             }
-            mine_matrix[Math.floor(ind / dimension)][ind % dimension] = -1;
+            mine_matrix[Math.floor(icon / dimension)][icon % dimension] = -1;
         }
 
         // recalc numbers andre you stink doo doo
@@ -333,11 +297,11 @@ function initMinesweeper(windowEl) {
     }
 
     for (let i=0; i<10; i++) {
-        let ind = Math.floor(Math.random() * (dimension*dimension));
-        while (mine_matrix[Math.floor(ind/dimension)][ind%dimension] != null) {
-            ind = Math.floor(Math.random() * (dimension*dimension));
+        let icon = Math.floor(Math.random() * (dimension*dimension));
+        while (mine_matrix[Math.floor(icon/dimension)][icon%dimension] != null) {
+            icon = Math.floor(Math.random() * (dimension*dimension));
         }
-        mine_matrix[Math.floor(ind/dimension)][ind%dimension] = -1;
+        mine_matrix[Math.floor(icon/dimension)][icon%dimension] = -1;
     }
     
     //yo this one 100% real (not ai) you can tell cuz its peak
@@ -438,13 +402,13 @@ function initWindow(win) {
     const header = win.querySelector('.window-header') || win;
 
     header.style.cursor = 'move';
-    header.addEventListener('mousedown', e => {
+    header.addEventListener('pointerdown', e => {
         e.preventDefault(); //prevents text and image highlighting while dragging
         isDragging = true;
         offsetX = e.clientX - win.offsetLeft;
         offsetY = e.clientY - win.offsetTop;
     });
-    win.addEventListener('mousedown', e => {
+    win.addEventListener('pointerdown', e => {
         e.preventDefault();
         topZ++;
         win.style.zIndex = topZ;
@@ -458,7 +422,7 @@ function initWindow(win) {
     })
 
     // keep window movement bounded to t-container
-    document.addEventListener('mousemove', e => {
+    document.addEventListener('pointermove', e => {
         if (!isDragging) return;
         
         const container = document.querySelector('.t-container');
@@ -474,7 +438,7 @@ function initWindow(win) {
         win.style.top = newTop + 'px';
     });
 
-    document.addEventListener('mouseup', () => isDragging = false);
+    document.addEventListener('pointerup', () => isDragging = false);
 }
 
 setInterval(updateClock, 1000);
@@ -482,32 +446,71 @@ updateClock(); // run once on load
 
 document.querySelectorAll('.window-98').forEach(initWindow);
 
-document.querySelectorAll('.desktop-app').forEach(desktopApp => {
-    desktopApp.addEventListener('dblclick', e => {
-        //check if there is a minesweeper window open already
-        if (document.querySelector('.minesweeper-window')) return;
-        //check if the app being double clicked is minesweeper
-        if (!desktopApp.querySelector('.minesweeper-ind')) return;
+// it may be more efficient to store the instance of the window and almost definitely is more efficient to store the desktop icon 
+// instance as the icons are static and will never become null, thus making one call inside the constructor would save having
+
+// The Window class stores the names of the html classes related to each window and the method that is called when resolving 
+// a dblclick event on a desktop icon
+
+class Window {
+    constructor(desktopInstance, windowInstance, template, taskbarTemplate) {
+        this._desktopInstance = desktopInstance;
+        this._windowInstance = windowInstance;
+        this._template = template;
+        this._taskbarTemplate = taskbarTemplate;
+    }
+    // _desktopInstance is the class name of a given window type
+    get desktop() {
+        return this._desktopInstance;
+    }
+    // _windowInstance is the class name of a given window type
+    get window() {
+        return this._windowInstance;
+    }
+    // _template is name of the template of the given window type, the template stores only the data required to make the window
+    get template() {
+        return this._template;
+    }
+    // _taskbarTemplate is name of the template of the given taskbar button, the template stores only the data required to 
+    // make the button
+    get taskbar() {
+        return this._taskbarTemplate;
+    }
+
+    // static method that will create a window and taskbar instance of a given window type, called through an eventlistener
+    // on the desktopApp class of divs, pulls classes from WindowList for templates and for checking if there are
+    // already opened windows of a given type... nix that just remove the desktopInstance param, its completely unneccesary,
+    // check window for minesweeper check instead
+
+    doubleClickHandler(desktopApp) {
+        console.log('existing window?', document.querySelector(this._windowInstance));
+        console.log('icon match?', desktopApp.querySelector(this._desktopInstance));
+
+        if (document.querySelector(this._windowInstance)) return;
+        if (!desktopApp.querySelector(this._desktopInstance)) return; //shouldnt need to check as this method only runs after a desktop icon is clicked?
 
         //initialize a clone from the template of the minesweeper window
-        const clone = document.getElementById('minesweeper-template').content.cloneNode(true);
+        const clone = document.getElementById(this._template).content.cloneNode(true); //template
         const win = clone.querySelector('.window-98');
         
-        //add class to check for existence of window
-        win.classList.add('minesweeper-window'); 
+        //add class to check in future for existence of window
+        win.classList.add(this._windowInstance.slice(1)); //window instance 
 
         //actually place the taskbar tab
         document.querySelector('.t-container').appendChild(clone);
 
         //initialize the event handling
-        initWindow(document.querySelector('.minesweeper-window'));
-        initMinesweeper(document.querySelector('.minesweeper-window'))
+        initWindow(document.querySelector(this._windowInstance)); //window instance
+        if (this._desktopInstance == '.minesweeper-icon') {
+            console.log("pee pee");
+            initMinesweeper(document.querySelector('.minesweeper-window')) //special init for minesweeper
+        }
 
         //for adding minesweeper to taskbar
-        const taskbarClone = document.getElementById('minesweeper-taskbar-template').content.cloneNode(true);
-        document.querySelector('.taskbar-window-container').appendChild(taskbarClone);
+        const taskbarClone = document.getElementById(this._taskbarTemplate).content.cloneNode(true); //taskbar template
+        document.querySelector('.taskbar-window-container').appendChild(taskbarClone); 
 
-        const winEl = document.querySelector('.minesweeper-window');
+        const winEl = document.querySelector(this._windowInstance); //window instance
         const btn = document.querySelector('.taskbar-window-container').lastElementChild;
         winEl._taskbarBtn = btn;
         btn.addEventListener('click', e => {
@@ -517,8 +520,27 @@ document.querySelectorAll('.desktop-app').forEach(desktopApp => {
             topZ++;
             winEl.style.zIndex = topZ;
         });
+    }
+
+}
+
+document.querySelectorAll('.desktop-app').forEach(desktopApp => {
+    desktopApp.addEventListener('dblclick', e => {
+        if (desktopApp.querySelector('.minesweeper-icon')) {
+            minesweeperWindow.doubleClickHandler(desktopApp);
+        }
+        if (desktopApp.querySelector('.explorer-icon')) {
+            explorerWindow.doubleClickHandler(desktopApp);
+        }
+        if (desktopApp.querySelector('.about-icon')) {
+            aboutWindow.doubleClickHandler(desktopApp);
+        }
+        for (let i=0; i<WindowList.length; i++) {
+            if (desktopApp.querySelector)
+            WindowList[i].window().doubleClickHandler(desktopApp)
+        }
     });
-    desktopApp.addEventListener('mousedown', e => {
+    desktopApp.addEventListener('pointerdown', e => {
         e.preventDefault();
     });
 });
@@ -536,3 +558,12 @@ function updateClock() {
     document.getElementById('clock').textContent = `${hours}:${minsStr} ${ampm}`;
   }
 }
+
+const minesweeperWindow = new Window('.minesweeper-icon', '.minesweeper-window' , 'minesweeper-template', 'minesweeper-taskbar-template');
+const explorerWindow = new Window('.explorer-icon', '.explorer-window' , 'explorer-template', 'explorer-taskbar-template');
+const aboutWindow = new Window('.about-icon', '.about-window' , 'about-template', 'about-taskbar-template');
+
+const WindowList = [];
+WindowList.appendChild(minesweeperWindow);
+WindowList.appendChild(explorerWindow);
+WindowList.appendChild(aboutWindow);

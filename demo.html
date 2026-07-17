@@ -10,11 +10,11 @@
 <!--Important fixes:
         DONE -- 1. Window dragging should only be allowed when not clicking on 
         min, max, close, or image to far left of header
-        2. When dragging windows, images and text should not be highlighted
+        DONE -- 2. When dragging windows, images and text should not be highlighted
         3. Entire taskbar should have less left margin, for ref look at 
         98js site
         4. The amount of inline css styling in this document severely hampers
-        readability
+        readability ...tru
         5. Pressing start makes taskbar shift to right, as it has 4 seperate
         times so far in this project
         6. Grey out max/min on minesweeper
@@ -44,60 +44,70 @@
 	</div>
 </header>
 <body style="overflow: hidden;">
-    <div style="display: flex; flex-direction: column; height: 100vh;;">
-        <!--make div that contains all windows, minus taskbar so that when setting
-		window 98 to maximize the window it doesnt take up header and taskbar as well :)-->
-        <div style="position: relative; justify-content: flex-start;" class="t-container">
+    <div style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+        <div style="margin-top: -5px; margin-left: -5px; position: relative; float: left; justify-content: flex-start; flex-wrap: wrap; width: 100vw; min-height: 0;" class="t-container">
             
             <!--desktop apps-->
             <div class="desktop-app">
                 <div style="white-space: nowrap; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                    <div class="info-ind" style="margin-bottom: 5px; margin-top: -10px;">
-                        <img style="height: 100%; width: 100%; margin-bottom: 5px;" src="media/computer_explorer-2.png">
+                    <div class="explorer-icon" style="margin-top: 5px;">
+                        <img style="height: 39px; width: 39px; margin-bottom: 5px;" src="media/computer_explorer-2.png">
                     </div>
                     My Computer
                 </div>
             </div>
             <div class="desktop-app">
                 <div style="white-space: nowrap; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                    <div class="minesweeper-ind" style="margin-bottom: 5px; margin-top: -10px;">
-                        <img style="height: 100%; width: 100%; margin-bottom: 5px;" src="media/mine.png">
+                    <div class="minesweeper-icon" style="margin-top: 5px;">
+                        <img style="height: 39px; width: 39px; margin-bottom: 5px;" src="media/mine.png">
                     </div>
                     Minesweeper
                 </div>
             </div>
-
-            <!--windows-->
-            <div class="window-98" id="infoWindow" style="width: 320px; height: 160px; position: absolute; top: 200px; left: 100px; display: flex; flex-direction: column;">
-                <div class="window-header" style="justify-items: center;">
-                    <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
-                    <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
-                    <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
-                        <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 0px; display: flex; align-items: center; justify-content: center;">
-                            <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
-                        </button>
-                        <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
-                            <img src="media/max.png" class="icon" style="width: 12px; height: 12px;">
-                        </button>
-                        <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px">
-                            <img src="media/close.png" class="icon" style="width: 12px; height: 12px;">
-                        </button>
+            <div class="desktop-app">
+                <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                    <div class="about-icon" style="margin-top: 5px;">
+                        <img style="height: 39px; width: 39px; margin-bottom: 5px;" src="media/book.png">
                     </div>
-                </div>
-                <div style="height: 100%; width: 100%; display: flex; flex: 1;">
-                    <div>
-                        <img src="media/book.png" class="icon" style="height: fit-content;">
-                    </div>
-                    <div>
-                        <p style="font-size: small; color: black; margin-right: 6px;">
-                            Welcome to my Windows 98 demo!<br><br>
-                            This is the closest I can get to accurate Win98 stylings, but not necessarily the closest possible faithful recreation of Win98's inner workings, so expect some minor visual bugs :)
-                        </p>
-                    </div>
+                    About This
                 </div>
             </div>
-            <!--My Computer File Explorer-->
-            <div class="window-98" id="computerWindow" style="width: 560px; height: 350px; position: absolute; top: 230px; left: 110px; display: flex; flex-direction: column;">
+
+            <!--windows-->
+            <template id="about-template">
+                <div class="window-98" id="infoWindow" style="width: 320px; height: 160px; position: absolute; top: 200px; left: 100px; display: flex; flex-direction: column;">
+                    <div class="window-header" style="justify-items: center;">
+                        <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+                        <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">Windows 98 Demo</p>
+                        <div style="flex: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end;">
+                            <button class="start min" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 0px; display: flex; align-items: center; justify-content: center;">
+                                <img src="media/min.png" class="icon" style="width: 12px; height: 12px;">
+                            </button>
+                            <button class="start max" style="color: black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+                                <img src="media/max.png" class="icon" style="width: 12px; height: 12px;">
+                            </button>
+                            <button class="start cls" style="color:black; height: 85%; aspect-ratio: 1/1; text-align: center; margin-left: 0px; margin-right: 2px; display: flex; align-items: center; justify-content: center; padding-bottom: 2px">
+                                <img src="media/close.png" class="icon" style="width: 12px; height: 12px;">
+                            </button>
+                        </div>
+                    </div>
+                    <div style="height: 100%; width: 100%; display: flex; flex: 1;">
+                        <div>
+                            <img src="media/book.png" class="icon" style="height: fit-content;">
+                        </div>
+                        <div>
+                            <p style="font-size: small; color: black; margin-right: 6px;">
+                                Welcome to my Windows 98 demo!<br><br>
+                                This is the closest I can get to accurate Win98 stylings, but not necessarily the closest possible faithful recreation of Win98's inner workings, so expect some minor visual bugs :)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!--File Explorer-->
+            <template id="explorer-template">
+            <div class="window-98" id="explorerWindow" style="width: 560px; height: 350px; position: absolute; top: 230px; left: 110px; display: flex; flex-direction: column;">
                 <div class="window-header" style="justify-items: center;">
                     <img src="media/computer_explorer-1.png" class="icon" style="height: 16px; width: 16px; margin-left: 0; margin-right: 2px;">
                     <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">My Computer</p>
@@ -204,8 +214,14 @@
                                 <div class="half1" style="height: 100%;"></div>
                                 <div class="half2" style="height: 100%;"></div>
                             </div>
+
                             <div class="explorer-header" style="margin-left: 5px;">
                             A<u>d</u>dress
+                            </div>
+
+                            <div class="window-98" style="display: flex; align-items: center; background-color: #EFEFEF; margin: 6px; border-color: #404040; width: 100%; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; border-style:solid">
+                                <img src="media/computer_explorer-1.png" class="icon" style="height: 16px; width: 16px; margin-left: 1px; margin-right: 5px;">
+                                My Computer
                             </div>
                         </div>
                     </div>
@@ -218,6 +234,7 @@
                 </div>
                 
             </div>
+            </template>
             <template id="minesweeper-template">
                 <div class="window-98" id="minesweeperWindow" style="width: 237px; height: 320px; position: absolute; top: 50px; left: 470px; display: flex; flex-direction: column;">
                     <div class="window-header">
@@ -260,7 +277,7 @@
         </div>
         <div class="taskbar">
                 <div class="container">
-                    <div class="t-container" style="height: 100%; justify-content: center; flex-direction: row; justify-content: flex-start; align-items: center; padding-top: 2px;">
+                    <div class="t-container" style="height: 100%; flex-direction: row; justify-content: flex-start; align-items: center; padding-top: 2px;">
                         <button class="start" href="index.html">                            
                             <img src="media/start-button.png" alt="Start Button" class="mimg" style="height: 16px;">                        
                         </button>
@@ -271,14 +288,22 @@
                         
                         <!-- windows on taskbar here -->
                         <div class="taskbar-window-container">
-                            <div class="taskbar-window" data-window-id="infoWindow">
-                                <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
-                                Welcome to Windows 98
-                            </div>
+                            <template id="about-taskbar-template">
+                                <div class="taskbar-window" data-window-id="aboutWindow">
+                                    <img src="media/windows_slanted-0.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+                                    Welcome to Windows 98
+                                </div>
+                            </template>
                             <template id="minesweeper-taskbar-template">
                                 <div class="taskbar-window" data-window-id="minesweeperWindow">
-                                    <img src="media/mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px;">
+                                    <img src="media/mine.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px; margin-top: 7px;">
                                     Minesweeper
+                                </div>
+                            </template>
+                            <template id="explorer-taskbar-template">
+                                <div class="taskbar-window" data-window-id="explorerWindow">
+                                    <img src="media/computer_explorer-1.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px; margin-top: 7px;">
+                                    My Computer
                                 </div>
                             </template>
                         </div>
