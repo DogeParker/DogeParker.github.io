@@ -94,6 +94,49 @@ header {
     outline: none;
 }
 
+.txt-output::-webkit-scrollbar {
+    width: 17px;
+    margin-top: -4px;
+}
+.txt-output::-webkit-scrollbar-track {
+    background: #dfdfdf;
+}
+.txt-output::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border: 2px solid #404040;
+    border-top-color: #EFEFEF;
+    border-left-color: #EFEFEF;
+    background-color: #c0c0c0;
+}
+.txt-output::-webkit-scrollbar-button:single-button {
+    box-sizing: border-box;
+    display: block;
+    height: 17px;
+    width: 17px;
+    background-color: #c0c0c0;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #404040;
+    border-top-color: #EFEFEF;
+    border-left-color: #EFEFEF;
+}
+
+/* up arrow */
+.txt-output::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url('media/up-arrow.png'); /* or an inline SVG triangle */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+}
+
+/* down arrow */
+.txt-output::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url('media/down-arrow.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+}
+
 .time {
     padding-right: 4px;
     padding-left: 3px;
