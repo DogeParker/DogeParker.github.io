@@ -1,0 +1,22 @@
+name: Update manifest
+on:
+  push:
+    paths:
+      - 'My Computer/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python generate_manifest.py
+      - name: Commit manifest
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add "My Computer/manifest.json"
+          git diff --staged --quiet || git commit -m "Auto-update manifest"
+          git push

@@ -449,6 +449,26 @@ function initWindow(win) {
     document.addEventListener('pointerup', () => isDragging = false);
 }
 
+function initNotepad(win) {
+    win.querySelectorAll('.txt-output').forEach(box => {
+        const filePath = box.getAttribute('href');
+        fetch(filePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text(); // Convert the file content to plain text
+            })
+            .then(data => {
+                box.value = data;
+                document.getElementById('notepad-title').textContent = filePath.slice(12)
+            })
+            .catch(error => {
+                console.error('Error reading the file:', error);
+            });
+    });
+}
+
 setInterval(updateClock, 1000);
 updateClock(); // run once on load
 
@@ -485,12 +505,12 @@ class Window {
         return this._taskbarTemplate;
     }
 
-    // static method that will create a window and taskbar instance of a given window type, called through an eventlistener
+    // static method that will create a window and taskbar instance of a given window type, this method is called through an eventlistener
     // on the desktopApp class of divs, pulls classes from WindowList for templates and for checking if there are
     // already opened windows of a given type... nix that just remove the desktopInstance param, its completely unneccesary,
     // check window for minesweeper check instead
 
-    doubleClickHandler(desktopApp) {
+    doubleClickHandler(desktopApp, filename) {
         console.log('existing window?', document.querySelector(this._windowInstance));
         console.log('icon match?', desktopApp.querySelector(this._desktopInstance));
 
@@ -510,8 +530,23 @@ class Window {
         //initialize the event handling
         initWindow(document.querySelector(this._windowInstance)); //window instance
         if (this._desktopInstance == '.minesweeper-icon') {
-            console.log("pee pee");
             initMinesweeper(document.querySelector('.minesweeper-window')) //special init for minesweeper
+        }
+        if (this._desktopInstance == '.explorer-icon') {
+            fetch('My Computer/manifest.json')
+                .then(res => res.json())
+                .then(files => {
+                    const container = document.querySelector('.txt-container'); //target app container
+
+                    files.forEach(filename => {
+                        const icon = createFileIcon(filename);
+                        container.appendChild(icon);
+                    });
+            });
+        }
+        else if (this._desktopInstance == '.notepad-icon') {
+            document.querySelector('.txt-output').setAttribute('href', "My Computer/"+filename); 
+            initNotepad(document.querySelector('.notepad-window')) //special init for notepad
         }
 
         //for adding minesweeper to taskbar
@@ -535,19 +570,19 @@ class Window {
 document.querySelectorAll('.desktop-app').forEach(desktopApp => {
     desktopApp.addEventListener('dblclick', e => {
         if (desktopApp.querySelector('.minesweeper-icon')) {
-            minesweeperWindow.doubleClickHandler(desktopApp);
+            minesweeperWindow.doubleClickHandler(desktopApp,NaN);
         }
         if (desktopApp.querySelector('.explorer-icon')) {
-            explorerWindow.doubleClickHandler(desktopApp);
+            explorerWindow.doubleClickHandler(desktopApp,NaN);
         }
         if (desktopApp.querySelector('.about-icon')) {
-            aboutWindow.doubleClickHandler(desktopApp);
+            aboutWindow.doubleClickHandler(desktopApp,NaN);
         }
-        //make it work like this
+        /*make it work like this
         for (let i=0; i<WindowList.length; i++) {
             if (desktopApp.querySelector)
             WindowList[i].window().doubleClickHandler(desktopApp)
-        }
+        }*/
     });
     desktopApp.addEventListener('pointerdown', e => {
         e.preventDefault();
@@ -571,27 +606,31 @@ function updateClock() {
 const minesweeperWindow = new Window('.minesweeper-icon', '.minesweeper-window' , 'minesweeper-template', 'minesweeper-taskbar-template');
 const explorerWindow = new Window('.explorer-icon', '.explorer-window' , 'explorer-template', 'explorer-taskbar-template');
 const aboutWindow = new Window('.about-icon', '.about-window' , 'about-template', 'about-taskbar-template');
+const notepadWindow = new Window('.notepad-icon', '.notepad-window' , 'notepad-template', 'notepad-taskbar-template');
 
 const WindowList = [];
 WindowList.push(minesweeperWindow);
 WindowList.push(explorerWindow);
 WindowList.push(aboutWindow);
+WindowList.push(notepadWindow);
 
+function createFileIcon(filename) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'desktop-app';
+    wrapper.innerHTML = `
+        <div style="white-space: nowrap; display: flex; justify-content: center; align-items: center; flex-direction: column; color: #000000;">
+            <div class="notepad-icon" style="margin-top: 5px;">
+                <img style="height: 48px; width: 48px; margin-bottom: 5px;" src="media/notepad_file-2.png">
+            </div>
+            ${filename}
+            </div>`;
 
-document.querySelectorAll('.txt-output').forEach(box => {
-    const filePath = box.getAttribute('href');
-    fetch(filePath)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text(); // Convert the file content to plain text
-        })
-        .then(data => {
-            box.value = data;
-            document.getElementById('notepad-title').textContent = filePath.slice(12)
-        })
-        .catch(error => {
-            console.error('Error reading the file:', error);
-        });
-});
+    wrapper.addEventListener('dblclick', e => {
+        notepadWindow.doubleClickHandler(wrapper, filename);
+    });
+    wrapper.addEventListener('pointerdown', e => {
+        e.preventDefault();
+    });
+    return wrapper;
+}
+

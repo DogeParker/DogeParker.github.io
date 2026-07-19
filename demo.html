@@ -8,20 +8,19 @@
 <link rel='icon' type='image/x-icon' href="media/favicon2.ico">
 
 <!--Important fixes:
-        DONE -- 1. Window dragging should only be allowed when not clicking on 
-        min, max, close, or image to far left of header
+        1. Desktop icons should appear selected when clicked on once
         DONE -- 2. When dragging windows, images and text should not be highlighted
         3. Entire taskbar should have less left margin, for ref look at 
         98js site
         4. The amount of inline css styling in this document severely hampers
         readability ...tru
-        5. Pressing start makes taskbar shift to right, as it has 4 seperate
+        DONE (mamdani ahh fix) --5. Pressing start makes taskbar shift to right, as it has 4 seperate
         times so far in this project
         6. Grey out max/min on minesweeper
-        7. Add desktop app to open info window
+        DONE -- 7. Add desktop app to open info window
         DONE -- 8. Make desktop apps wrap to next column, evenly (low priority)
-        9. Make working notepad (low priority)
-        10. Make File Explorer link to folder in github (low priority)
+        DONE -- 9. Make working notepad (low priority)
+        DONE?-- 10. Make File Explorer link to folder in github (low priority)
 -->
 
 <style>
@@ -70,7 +69,7 @@
                         <div class="about-icon" style="margin-top: 5px;">
                             <img style="height: 39px; width: 39px; margin-bottom: 5px;" src="media/book.png">
                         </div>
-                        About This
+                        Information
                     </div>
                 </div>
             </div>
@@ -100,7 +99,7 @@
                         <div>
                             <p style="font-size: small; color: black; margin-right: 6px;">
                                 Welcome to my Windows 98 demo!<br><br>
-                                This is the closest I can get to accurate Win98 stylings, but not necessarily the closest possible faithful recreation of Win98's inner workings, so expect some minor visual bugs :)
+                                This is the closest I can get to accurate Win98 stylings, but certainly not the closest possible faithful recreation of Win98's inner workings, so expect some minor visual bugs :)
                                 Also... I have additionally found out that firefox hates fun scrollbars so if you use firefox, keep that in mind while browsing
                             </p>
                         </div>
@@ -110,7 +109,7 @@
 
             <!--File Explorer-->
             <template id="explorer-template">
-            <div class="window-98" id="explorerWindow" style="width: 560px; height: 350px; position: absolute; top: 230px; left: 110px; display: flex; flex-direction: column;">
+            <div class="window-98" id="explorerWindow" style="width: 580px; height: 350px; position: absolute; top: 230px; left: 110px; display: flex; flex-direction: column;">
                 <div class="window-header" style="justify-items: center;">
                     <img src="media/computer_explorer-1.png" class="icon" style="height: 16px; width: 16px; margin-left: 0; margin-right: 2px;">
                     <p style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%;">My Computer</p>
@@ -229,8 +228,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="window-98" style="background-color: #ffffff; flex: 1; width:auto; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px">
-                    <img src="media/wvleft.bmp" class="icon" style="margin-top: 0; margin-left: 0; flex:1; max-height: 175px; width: 180px">
+                <div class="window-98" style="display: flex; flex-direction: row; min-height: 0; white-space: prewrap; background-color: #ffffff; flex: 1; width:auto; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px">
+                    <img src="media/wvleft.bmp" class="icon" style="float:left; margin-top: 0; margin-left: 0; flex:1; max-height: 175px; max-width: 180px;">
+                    <div class="txt-container scroll-bar" style="height: 99.5%; overflow-y: scroll; white-space: prewrap; background-color: #ffffff; flex: 1; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px; margin-top: 0;">
+                        
+                    </div>
                 </div>
                 <div class="window-98" style="height: 24px; width:auto; border-color: #404040;border-bottom-color: #EFEFEF;border-right-color: #EFEFEF; margin:2px">
                     
@@ -241,7 +243,8 @@
 
             <!--Notepad-->
 
-            <div class="window-98" id="explorerWindow" style="width: 560px; height: 350px; position: absolute; top: 230px; left: 110px; display: flex; flex-direction: column;">
+            <template id="notepad-template">
+            <div class="window-98" id="notepadWindow" style="width: 560px; height: 350px; position: absolute; top: 130px; left: 810px; display: flex; flex-direction: column;">
                 <div class="window-header" style="justify-items: center;">
                     <img src="media/notepad-3.png" class="icon" style="height: 16px; width: 16px; margin-left: 0; margin-right: 2px;">
                     <p id="notepad-title" style="display: flex; align-items: center; color: #EFEFEF; font-size: 14px; width: fit-content; height: 100%; margin-right: 5px;"></p>
@@ -274,10 +277,11 @@
                 </div>
                 <div class="window-98" style="background-color: #ffffff; flex: 1; width:auto; border-color: #404040; border-bottom-color: #cfcfcf; border-right-color: #cfcfcf; margin:2px">
                     <!-- The container to display the text contents -->
-                    <textarea href="My Computer/server.txt" class="txt-output" style="height: 99.5%;" ></textarea>
+                    <textarea href="" class="scroll-bar txt-output" style="height: 99.5%;" ></textarea>
                 
                 </div>
             </div>
+            </template>
 
             <!--Minesweeper-->
 
@@ -350,6 +354,12 @@
                                 <div class="taskbar-window" data-window-id="explorerWindow">
                                     <img src="media/computer_explorer-1.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px; margin-top: 7px;">
                                     My Computer
+                                </div>
+                            </template>
+                            <template id="notepad-taskbar-template">
+                                <div class="taskbar-window" data-window-id="explorerWindow">
+                                    <img src="media/notepad-3.png" class="icon" style="height: 20px; width: 20px; margin-left: 0; margin-right: 2px; margin-top: 7px;">
+                                    Notepad
                                 </div>
                             </template>
                         </div>

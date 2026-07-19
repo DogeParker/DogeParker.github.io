@@ -94,21 +94,21 @@ header {
     outline: none;
 }
 
-.txt-output::-webkit-scrollbar {
+.scroll-bar::-webkit-scrollbar {
     width: 17px;
     margin-top: -4px;
 }
-.txt-output::-webkit-scrollbar-track {
+.scroll-bar::-webkit-scrollbar-track {
     background: #dfdfdf;
 }
-.txt-output::-webkit-scrollbar-thumb {
+.scroll-bar::-webkit-scrollbar-thumb {
     background: #c0c0c0;
     border: 2px solid #404040;
     border-top-color: #EFEFEF;
     border-left-color: #EFEFEF;
     background-color: #c0c0c0;
 }
-.txt-output::-webkit-scrollbar-button:single-button {
+.scroll-bar::-webkit-scrollbar-button:single-button {
     box-sizing: border-box;
     display: block;
     height: 17px;
@@ -122,7 +122,7 @@ header {
 }
 
 /* up arrow */
-.txt-output::-webkit-scrollbar-button:single-button:vertical:decrement {
+.scroll-bar::-webkit-scrollbar-button:single-button:vertical:decrement {
     background-image: url('media/up-arrow.png'); /* or an inline SVG triangle */
     background-position: center;
     background-repeat: no-repeat;
@@ -130,7 +130,7 @@ header {
 }
 
 /* down arrow */
-.txt-output::-webkit-scrollbar-button:single-button:vertical:increment {
+.scroll-bar::-webkit-scrollbar-button:single-button:vertical:increment {
     background-image: url('media/down-arrow.png');
     background-position: center;
     background-repeat: no-repeat;
@@ -192,8 +192,6 @@ header {
 }
 
 .start:active {
-    padding-left: 4px;
-    padding-top: 3px;
     border-left-color:#404040;
     border-top-color: #404040;
     border-bottom-color: #EFEFEF;
